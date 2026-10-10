@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#254875">
+<meta name="description" content="Pluggkort och tester inför provet i samhällsekonomi, åk 9.">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Provplugg">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; -webkit-text-size-adjust: 100%; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Provplugg Samhällsekonomi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+  /* Layout: smal sida med delmeny överst; varje kort är ett ljust "provblad" där fråga, infografik och provsvar sitter ihop. Fördjupningen sist, som kedjor av meningar. */
+  :root {
+    --bg: #ECEFF3;
+    --ink: #19212E;
+    --muted: #586374;
+    --line: #D3D9E1;
+    --accent: #254875;
+    --chip: #FFFFFF;
+
+    /* Bladet är ljust i båda teman, som ett utskrivet papper */
+    --board: #FFFFFF;
+    --board-ink: #1E2530;
+    --board-muted: #5B6676;
+    --board-line: #E1E5EB;
+    --board-soft: #F5F7FA;
+    --link-ink: #5B3FA6;
+
+    /* Färgerna från infografikerna */
+    --skatt: #E0711A;
+    --skatt-tint: #FCE8D9;
+    --sektor: #254875;
+    --sektor-tint: #E3E9F2;
+    --valfard: #3F8A4B;
+    --valfard-tint: #DDEEE1;
+    --lila: #6E52B8;
+    --lila-tint: #ECE6F8;
+    --ok: #2B7A3B;
+    --ok-tint: #E2F2E5;
+    --bad: #B3261E;
+    --bad-tint: #FBE4E2;
+    --half-ink: #8A5A00;
+
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10141B;
+      --ink: #E6EAF0;
+      --muted: #9AA5B5;
+      --line: #2A3441;
+      --accent: #9DB8E4;
+      --chip: #19202A;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10141B;
+    --ink: #E6EAF0;
+    --muted: #9AA5B5;
+    --line: #2A3441;
+    --accent: #9DB8E4;
+    --chip: #19202A;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .page {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding-inline: 16px;
+    padding-block: 28px 56px;
+    display: grid;
+    gap: 28px;
+  }
+
+  /* Sidhuvud */
+  .top-text { min-width: 0; display: grid; gap: 4px; }
+  .eyebrow {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.9rem, 4.4vw, 2.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .source { margin: 0; color: var(--muted); }
+
+  /* Delmeny */
+  .parts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .part {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--chip);
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+  .part b { color: var(--ink); font-weight: 700; }
+  .part .count { font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+  .part:hover { border-color: var(--accent); }
+  .part--deep { border-color: var(--accent); }
+
+  section { display: grid; gap: 18px; scroll-margin-top: 16px; }
+  .part-title {
+    margin: 12px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--muted);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .part-title span { color: var(--ink); }
+  .part-note { margin: -8px 0 0; color: var(--muted); max-width: 70ch; }
+
+  /* Provbladet */
+  .board {
+    background: var(--board);
+    color: var(--board-ink);
+    border: 1px solid var(--board-line);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgb(20 30 45 / 0.06), 0 8px 24px rgb(20 30 45 / 0.06);
+    padding: clamp(16px, 3vw, 32px);
+    display: grid;
+    gap: 20px;
+    min-width: 0;
+    scroll-margin-top: 16px;
+  }
+  .board-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--board-muted);
+  }
+  .question {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--board-ink);
+    text-wrap: balance;
+  }
+  .lead { display: grid; gap: 4px; }
+  .lead p {
+    margin: 0;
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    line-height: 1.5;
+    max-width: 66ch;
+  }
+  .board strong { font-weight: 700; color: var(--board-ink); }
+
+  /* Bild */
+  .figure { display: grid; gap: 12px; width: 100%; margin-inline: auto; min-width: 0; }
+  .figure-img { display: block; width: 100%; height: auto; max-width: 100%; }
+  .figure-missing {
+    border: 2px dashed var(--board-line);
+    border-radius: 12px;
+    background: var(--board-soft);
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--board-muted);
+  }
+  .figure-missing p { margin: 0; }
+  .missing-title { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; color: var(--board-ink); }
+
+  /* Rutor som sitter under varsin panel */
+  .steps { display: grid; align-items: stretch; }
+  .step { min-width: 0; display: grid; gap: 10px; }
+  .crop { display: none; }
+
+  .box {
+    position: relative;
+    background: var(--t);
+    border: 2px solid var(--c);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: clamp(0.98rem, 1.25vw, 1.06rem);
+    line-height: 1.45;
+    min-width: 0;
+    display: grid;
+    gap: 6px;
+    align-content: start;
+  }
+  .box p { margin: 0; }
+  .box--aligned::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -9px;
+    width: 14px; height: 14px;
+    background: var(--t);
+    border-left: 2px solid var(--c);
+    border-top: 2px solid var(--c);
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .box .box-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c);
+    margin: 0 0 2px;
+  }
+  .box-num {
+    display: inline-grid;
+    place-items: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--c);
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    letter-spacing: 0;
+  }
+
+  /* Rutor under en hel bild */
+  .boxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .boxes--single { grid-template-columns: minmax(0, 1fr); }
+  .boxes--single .box { font-size: clamp(1rem, 1.4vw, 1.12rem); }
+
+  .extras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .extra {
+    background: var(--board-soft);
+    border: 1px solid var(--board-line);
+    border-radius: 10px;
+    padding: 12px 16px 14px;
+    display: grid;
+    gap: 4px;
+    align-content: start;
+    min-width: 0;
+  }
+  .extra-label {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--board-muted);
+  }
+  .extra p:not(.extra-label) { margin: 0; line-height: 1.45; }
+
+  /* Fördjupning */
+  .deep-section { gap: 18px; }
+  .group-title {
+    margin: 10px 0 -4px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+  .howto {
+    background: var(--board);
+    color: var(--board-ink);
+    border: 1px solid var(--board-line);
+    border-radius: 16px;
+    padding: clamp(16px, 3vw, 28px);
+    display: grid;
+    gap: 14px;
+  }
+  .howto-head {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  }
+  .howto ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: h;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+  }
+  .howto li {
+    counter-increment: h;
+    background: var(--board-soft);
+    border: 1px solid var(--board-line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: grid;
+    gap: 4px;
+    align-content: start;
+  }
+  .howto li::before {
+    content: counter(h);
+    display: inline-grid;
+    place-items: center;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sektor);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+  .howto p { margin: 0; }
+  .howto-t { font-weight: 700; }
+
+  .deep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .deep { gap: 14px; }
+  .deep-q {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .link { color: var(--link-ink); font-weight: 700; font-style: italic; }
+
+  .chain {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0;
+  }
+  .chain li {
+    position: relative;
+    padding: 0 0 14px 30px;
+    line-height: 1.5;
+  }
+  .chain li::before {
+    content: "";
+    position: absolute;
+    left: 6px; top: 6px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--board);
+    border: 3px solid var(--sektor);
+  }
+  .chain li::after {
+    content: "";
+    position: absolute;
+    left: 13px; top: 21px; bottom: 0;
+    width: 2px;
+    background: var(--board-line);
+  }
+  .chain li:last-child { padding-bottom: 0; }
+  .chain li:last-child::after { display: none; }
+  .chain li:last-child::before { background: var(--sektor); }
+
+  .deep-bg { margin: 0; max-width: 70ch; }
+  .sides {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 12px;
+  }
+  .side {
+    background: var(--t);
+    border: 2px solid var(--c);
+    border-radius: 10px;
+    padding: 12px 16px 14px;
+    min-width: 0;
+  }
+  .side-title {
+    margin: 0 0 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c);
+  }
+  .side ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+  .deep-note { margin: 0; color: var(--board-muted); }
+  .deep-note strong { color: var(--board-ink); }
+  .mall {
+    border: 2px dashed var(--board-line);
+    border-radius: 10px;
+    padding: 12px 16px 14px;
+    display: grid;
+    gap: 2px;
+  }
+  .mall p { margin: 0; }
+
+
+  /* Testa dig själv */
+  .quiz { gap: 18px; scroll-margin-top: 16px; }
+  .quiz-intro { margin: -6px 0 0; color: var(--board-muted); max-width: 62ch; }
+  .quiz-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--board-line); }
+  .quiz-tabs [role="tab"] {
+    font: 700 1rem var(--font-body);
+    color: var(--board-muted);
+    background: none;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    padding: 10px 16px;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .quiz-tabs [role="tab"][aria-selected="true"] { color: var(--board-ink); border-bottom-color: var(--sektor); }
+  .quiz-panel { display: grid; gap: 14px; min-width: 0; }
+  .quiz-panel[hidden] { display: none; }
+  .q-top, .pair-top {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px;
+    font-size: 0.85rem; font-weight: 700; color: var(--board-muted); font-variant-numeric: tabular-nums;
+  }
+  .q-bar { height: 6px; border-radius: 999px; background: var(--board-line); overflow: hidden; }
+  .q-bar span { display: block; height: 100%; background: var(--sektor); transition: width 0.3s; }
+  .q { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 10px; }
+  .q-text {
+    padding: 0; font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(1.25rem, 2.6vw, 1.6rem); line-height: 1.2; color: var(--board-ink);
+  }
+  .q-text:focus { outline: none; }
+  .q-hint { margin: 0; color: var(--board-muted); }
+  .opts { display: grid; gap: 8px; }
+  .opt {
+    position: relative;
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px;
+    padding: 12px 14px; min-height: 52px;
+    border: 2px solid var(--board-line); border-radius: 10px; background: var(--board);
+    cursor: pointer; line-height: 1.35;
+  }
+  .opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .opt-box {
+    width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--board-muted);
+    display: grid; place-items: center; background: var(--board);
+  }
+  .opt input:checked + .opt-box { background: var(--sektor); border-color: var(--sektor); }
+  .opt input:checked + .opt-box::after {
+    content: ""; width: 6px; height: 11px; border: solid #FFFFFF; border-width: 0 3px 3px 0; transform: translateY(-1px) rotate(45deg);
+  }
+  .opt:hover:not(.is-locked) { border-color: var(--sektor); }
+  .opt:has(input:checked):not(.is-locked) { border-color: var(--sektor); background: var(--sektor-tint); }
+  .opt:focus-within { outline: 3px solid var(--sektor); outline-offset: 2px; }
+  .opt.is-locked { cursor: default; }
+  .opt-mark { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .opt.is-right { border-color: var(--ok); background: var(--ok-tint); }
+  .opt.is-right .opt-mark, .opt.is-missed .opt-mark { color: var(--ok); }
+  .opt.is-right input:checked + .opt-box { background: var(--ok); border-color: var(--ok); }
+  .opt.is-wrong { border-color: var(--bad); background: var(--bad-tint); }
+  .opt.is-wrong .opt-mark { color: var(--bad); }
+  .opt.is-wrong input:checked + .opt-box { background: var(--bad); border-color: var(--bad); }
+  .opt.is-missed { border-color: var(--ok); border-style: dashed; }
+  .q-feedback { display: grid; gap: 6px; max-width: 70ch; }
+  .q-feedback:empty { display: none; }
+  .q-feedback p { margin: 0; }
+  .fb-title { font-weight: 700; font-size: 1.05rem; }
+  .fb--ok { color: var(--ok); }
+  .fb--half { color: var(--half-ink); }
+  .fb--bad { color: var(--bad); }
+  .fb-link, .q-missed a { color: var(--sektor); font-weight: 700; }
+  .q-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn {
+    font: 700 1rem var(--font-body); min-height: 46px; padding: 10px 20px; border-radius: 10px;
+    border: 2px solid var(--sektor); background: var(--board); color: var(--sektor); cursor: pointer;
+  }
+  .btn--primary { background: var(--sektor); color: #FFFFFF; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn:focus-visible, .chip:focus-visible, .slot-drop:focus-visible, .seg:focus-visible, .quiz-tabs [role="tab"]:focus-visible {
+    outline: 3px solid var(--skatt); outline-offset: 2px;
+  }
+  .q-result { display: grid; gap: 8px; justify-items: start; }
+  .q-result p { margin: 0; }
+  .q-big { font-family: var(--font-display); font-weight: 800; font-size: 3rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .q-big:focus { outline: none; }
+  .q-sub { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--board-muted); }
+  .q-missed { margin: 0 0 6px; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+  .q-missed a { display: inline-block; padding: 6px 12px; border: 1px solid var(--board-line); border-radius: 999px; text-decoration: none; }
+
+  .pair-rounds { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; max-width: 100%; }
+  .seg { font: 700 0.95rem var(--font-body); padding: 7px 14px; min-height: 40px; border: 2px solid var(--sektor); border-radius: 999px; background: var(--board); color: var(--sektor); cursor: pointer; }
+  .seg[aria-pressed="true"] { background: var(--sektor); color: #FFFFFF; }
+  .bank {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    padding: 12px; min-height: 66px;
+    border: 2px dashed var(--board-line); border-radius: 12px; background: var(--board-soft);
+  }
+  .bank.is-over { border-color: var(--sektor); background: var(--sektor-tint); }
+  .bank-empty { color: var(--board-muted); }
+  .chip {
+    font: 700 0.95rem var(--font-body); padding: 8px 14px; min-height: 40px;
+    border-radius: 999px; border: 2px solid var(--sektor); background: var(--board); color: var(--sektor);
+    cursor: grab; touch-action: manipulation; user-select: none; -webkit-user-select: none;
+  }
+  .chip[aria-pressed="true"] { background: var(--sektor); color: #FFFFFF; box-shadow: 0 0 0 4px var(--sektor-tint); }
+  .slots { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .slot {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, 230px); align-items: center; gap: 12px;
+    padding: 10px 12px; border: 2px solid var(--board-line); border-radius: 10px; background: var(--board);
+  }
+  .slot-def { min-width: 0; line-height: 1.35; }
+  .slot-side { display: grid; gap: 4px; justify-items: stretch; }
+  .slot-drop {
+    min-height: 46px; width: 100%; padding: 4px;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px dashed var(--board-line); border-radius: 999px; background: var(--board-soft);
+    font: inherit; color: var(--board-muted); cursor: pointer;
+  }
+  .slots.is-armed .slot-drop { border-color: var(--sektor); color: var(--sektor); }
+  .slot-drop.is-over { border-color: var(--sektor); background: var(--sektor-tint); }
+  .slot-drop .chip--placed { cursor: grab; }
+  .slot-empty { font-size: 0.9rem; }
+  .slot.is-right { border-color: var(--ok); background: var(--ok-tint); }
+  .slot.is-right .chip--placed { border-color: var(--ok); color: var(--ok); }
+  .slot.is-wrong { border-color: var(--bad); background: var(--bad-tint); }
+  .slot.is-wrong .chip--placed { border-color: var(--bad); color: var(--bad); }
+  .slot-fix { font-size: 0.8rem; font-weight: 700; color: var(--bad); text-align: center; }
+  .pair-result { margin: 0; font-weight: 700; color: var(--board-ink); }
+  .pair-result:empty { display: none; }
+
+
+  /* Två lägen: Plugga och Testa dig */
+  .mode-bar {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    background: var(--bg); padding-block: 8px; margin-block: -8px;
+  }
+  .mode-switch {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    padding: 5px; border-radius: 14px; background: var(--chip); border: 1px solid var(--line);
+    box-shadow: 0 4px 14px rgb(20 30 45 / 0.08);
+  }
+  .mode-switch [role="tab"] {
+    display: grid; gap: 1px; justify-items: center; text-align: center;
+    min-height: 56px; padding: 8px 10px; border: 0; border-radius: 10px;
+    background: transparent; color: var(--muted); font: 400 0.82rem var(--font-body); cursor: pointer;
+  }
+  .mode-switch [role="tab"] b { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--ink); }
+  .mode-switch [role="tab"][aria-selected="true"] { background: var(--sektor); color: #DCE5F2; }
+  .mode-switch [role="tab"][aria-selected="true"] b { color: #FFFFFF; }
+  .mode-switch [role="tab"]:focus-visible { outline: 3px solid var(--skatt); outline-offset: 2px; }
+  .mode { display: grid; gap: 28px; min-width: 0; }
+  .mode[hidden] { display: none; }
+  section, .board, .test-panel { scroll-margin-top: 96px; }
+
+  /* Testa dig */
+  .test-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 20px; align-items: start; }
+  .quiz-tabs.test-menu {
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + 92px);
+    display: grid; gap: 14px; align-content: start;
+    border: 0; padding: 0; overflow: visible;
+  }
+  .test-menu-group { display: grid; gap: 6px; min-width: 0; }
+  .test-group {
+    margin: 0; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .test-menu-btns { display: grid; gap: 6px; }
+  .quiz-tabs.test-menu [role="tab"] {
+    width: 100%; white-space: normal; text-align: left; margin: 0;
+    font: 700 0.95rem var(--font-body); line-height: 1.25;
+    padding: 10px 14px; min-height: 44px;
+    border: 2px solid var(--line); border-radius: 10px; background: var(--chip); color: var(--ink);
+  }
+  .quiz-tabs.test-menu [role="tab"]:hover { border-color: var(--accent); }
+  .quiz-tabs.test-menu [role="tab"][aria-selected="true"] { background: var(--sektor); border-color: var(--sektor); color: #FFFFFF; }
+  .test-board { gap: 0; }
+  .test-panel { display: grid; gap: 12px; min-width: 0; }
+  .test-panel[hidden] { display: none; }
+  .test-panel > .test-group { color: var(--board-muted); margin-bottom: -6px; }
+  .test-title {
+    margin: 0; font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.1; color: var(--board-ink); text-wrap: balance;
+  }
+  .test-panel > .quiz-intro { margin: 0; }
+  @media (max-width: 760px) {
+    .test-layout { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .quiz-tabs.test-menu {
+      position: static; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
+      scrollbar-width: thin;
+    }
+    .test-menu-group, .test-menu-btns { display: contents; }
+    .test-menu-group > .test-group { display: none; }
+    .quiz-tabs.test-menu [role="tab"] { width: auto; flex: none; white-space: nowrap; border-radius: 999px; padding: 8px 14px; }
+  }
+
+  /* Fler övningar */
+  .quiz-tabs { overflow-x: auto; scrollbar-width: thin; }
+  .quiz-tabs [role="tab"] { white-space: nowrap; flex: none; }
+  .exercise .quiz-panel { gap: 14px; }
+  .chip { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; line-height: 1.25; text-align: center; }
+  .chip--long {
+    width: 100%; border-radius: 10px; align-items: flex-start; text-align: left;
+    padding: 10px 14px; font-weight: 600; white-space: normal;
+  }
+  .bank--long { flex-direction: column; align-items: stretch; }
+  .chip.is-right { border-color: var(--ok); color: var(--ok); background: var(--ok-tint); }
+  .chip.is-wrong { border-color: var(--bad); color: var(--bad); background: var(--bad-tint); }
+  .chip-fix { font-size: 0.72rem; font-weight: 700; color: var(--bad); }
+  .slot-drop { user-select: none; -webkit-user-select: none; }
+  .slot-drop .chip--placed { max-width: 100%; }
+  .slot--order { grid-template-columns: auto minmax(0, 1fr); }
+  .slot--order .slot-drop { border-radius: 12px; justify-content: stretch; min-height: 52px; }
+  .slot--order .slot-drop .slot-empty { width: 100%; text-align: center; }
+  .step-n {
+    display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
+    background: var(--sektor); color: #FFFFFF; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .slot--flow .slot-def b {
+    display: inline-grid; place-items: center; width: 26px; height: 26px; margin-right: 8px; border-radius: 50%;
+    background: var(--sektor); color: #FFFFFF; font-size: 0.85rem;
+  }
+  .flow-diagram { max-width: 640px; width: 100%; margin-inline: auto; }
+  .flow-svg { display: block; width: 100%; height: auto; }
+  .buckets { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  .bucket { border: 2px solid var(--c); border-radius: 12px; background: var(--t); display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+  .bucket-head {
+    margin: 0; padding: 8px 12px; background: var(--c); color: #FFFFFF; border-radius: 9px 9px 0 0;
+    font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .bucket-head span { font-variant-numeric: tabular-nums; font-size: 0.85rem; opacity: 0.9; }
+  .bucket-body { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px; padding: 10px; min-height: 120px; }
+  .bucket-body.is-over { background: var(--board); }
+  .bucket-add {
+    flex: 1 1 100%; min-height: 44px; border: 2px dashed var(--c); border-radius: 10px; background: transparent;
+    font: 600 0.9rem var(--font-body); color: var(--board-muted); cursor: pointer;
+  }
+  .buckets.is-armed .bucket-add { color: var(--board-ink); background: var(--board); border-style: solid; }
+  .bucket-add:focus-visible { outline: 3px solid var(--skatt); outline-offset: 2px; }
+  .bucket .chip--placed:not(.is-right):not(.is-wrong) { background: var(--board); }
+
+  @media (max-width: 560px) {
+    .slot { grid-template-columns: minmax(0, 1fr); }
+    .slot--order { grid-template-columns: auto minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) { .q-bar span { transition: none; } }
+
+  a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .foot { margin: 0; font-size: 0.875rem; color: var(--muted); }
+
+  /* Mobil */
+  @media (max-width: 760px) {
+    .figure--steps > .figure-img { display: none; }
+    .steps { grid-template-columns: minmax(0, 1fr) !important; gap: 34px; }
+    .step { grid-column: 1 !important; position: relative; }
+    .step + .step::before {
+      content: "";
+      position: absolute;
+      top: -26px;
+      left: 50%;
+      width: 14px; height: 14px;
+      border-right: 3px solid var(--board-line);
+      border-bottom: 3px solid var(--board-line);
+      transform: translateX(-50%) rotate(45deg);
+    }
+    .crop {
+      display: block;
+      width: 100%;
+      max-width: min(100%, var(--crop-max));
+      aspect-ratio: var(--ar);
+      margin-inline: auto;
+      background-repeat: no-repeat;
+      background-size: var(--bs);
+      background-position: var(--bx);
+    }
+    .figure-scroll { overflow-x: auto; }
+    .figure-scroll .figure-inner { min-width: 600px; }
+    .figure-scroll::after {
+      content: "Dra sidledes för att se hela bilden";
+      display: block;
+      font-size: 0.8rem;
+      color: var(--board-muted);
+      position: sticky;
+      left: 0;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+
+<div class="page" id="page">
+  <header class="top">
+    <div class="top-text">
+      <p class="eyebrow">Samhällskunskap åk 9 · Prov måndag vecka 42</p>
+      <h1>Provplugg Samhällsekonomi</h1>
+      <p class="source">Fundament kapitel 10 och s. 88–98</p>
+    </div>
+  </header>
+  <div class="mode-bar">
+    <div class="mode-switch" role="tablist" aria-label="Välj läge">
+      <button type="button" role="tab" id="mode-btn-plugga" aria-selected="true" aria-controls="mode-plugga">
+        <b>Plugga</b><span>Kort med bilder och svar</span></button>
+      <button type="button" role="tab" id="mode-btn-testa" aria-selected="false" aria-controls="mode-testa" tabindex="-1">
+        <b>Testa dig</b><span>9 tester</span></button>
+    </div>
+  </div>
+  <div class="mode" id="mode-plugga" role="tabpanel" aria-labelledby="mode-btn-plugga">
+    <nav aria-label="Delar"><ul class="parts"><li><a class="part" href="#del-1"><b>Del 1</b> Välfärdssystemet <span class="count">3 kort</span></a></li><li><a class="part" href="#del-2"><b>Del 2</b> Kommun, region och stat <span class="count">4 kort</span></a></li><li><a class="part" href="#del-3"><b>Del 3</b> Ekonomiska kretsloppet <span class="count">9 kort</span></a></li><li><a class="part" href="#del-4"><b>Del 4</b> Begrepp <span class="count">16 kort</span></a></li><li><a class="part" href="#del-5"><b>Extra</b> Extra ur kap. 10 <span class="count">12 kort</span></a></li><li><a class="part part--deep" href="#fordjupning"><b>Fördjupning</b> Frågor och svar <span class="count">21 frågor</span></a></li></ul></nav>
+    <section id="del-1" aria-labelledby="del-1-titel"><h2 class="part-title" id="del-1-titel">Del 1 <span>Sveriges välfärdssystem</span></h2><article class="board" id="kort-1" aria-labelledby="kort-1-fraga"><div class="board-head"><span>Kort 1</span><span>I boken: s. 88</span></div><h3 class="question" id="kort-1-fraga">Vad innebär begreppet välfärd?</h3><div class="lead"><p><strong>Välfärd</strong> betyder att människor <strong>har det bra</strong> och får sina <strong>viktigaste behov</strong> uppfyllda, till exempel mat, boende, kläder, utbildning, vård och omsorg.</p></div><div class="figure figure--steps" style="max-width:1200px"><img class="figure-img" src="kort01.webp" width="1312" height="465" loading="lazy" alt="Infografik till kort 1: Vad innebär begreppet välfärd?"><div class="steps" style="grid-template-columns:3fr 362fr 42fr 355fr 43fr 504fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Skatt" style="background-image:url(kort01.webp);--ar:362/465;--bs:362.43% 100.00%;--bx:0.32% 0.00%;--crop-max:290px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>I Sverige betalas välfärden med <strong>skatt</strong>, och den som <strong>tjänar mer betalar mer</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Offentlig sektor" style="background-image:url(kort01.webp);--ar:355/465;--bs:369.58% 100.00%;--bx:42.53% 0.00%;--crop-max:284px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Skatten går till den <strong>offentliga sektorn</strong>, alltså <strong>staten, regionerna och kommunerna</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Välfärd" style="background-image:url(kort01.webp);--ar:504/465;--bs:260.32% 100.00%;--bx:99.63% 0.00%;--crop-max:403px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>De använder pengarna till sådant vi har <strong>gemensamt</strong>, till exempel <strong>skola, vård, omsorg, polis, brandkår, försvar, vägar</strong> samt <strong>bidrag och pension</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Målet</p><p>Alla ska ha <strong>ekonomisk och social trygghet</strong>, och <strong>skillnaderna</strong> mellan människor ska bli <strong>mindre</strong>.</p></div><div class="extra"><p class="extra-label">Exempel</p><p>Din skola är gratis eftersom den betalas med <strong>skattepengar</strong>.</p></div><div class="extra"><p class="extra-label">Jämför</p><p>I många andra länder måste man i stället betala för <strong>egna försäkringar</strong>.</p></div></div></article><article class="board" id="kort-2" aria-labelledby="kort-2-fraga"><div class="board-head"><span>Kort 2</span><span>I boken: s. 89–91</span></div><h3 class="question" id="kort-2-fraga">Ge exempel på ekonomisk trygghet i vårt samhälle.</h3><div class="lead"><p><strong>Ekonomisk trygghet</strong> betyder att man ska kunna <strong>klara sig ekonomiskt</strong> även när man inte kan försörja sig själv, till exempel som <strong>sjuk, arbetslös eller gammal</strong>.</p><p>Det kallas ibland vårt <strong>ekonomiska skyddsnät</strong>.</p></div><div class="figure figure--steps" style="max-width:1190px"><img class="figure-img" src="kort02.webp" width="1341" height="631" loading="lazy" alt="Infografik till kort 2: Ge exempel på ekonomisk trygghet i vårt samhälle."><div class="steps" style="grid-template-columns:3fr 381fr 30fr 538fr 29fr 357fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Barn och unga" style="background-image:url(kort02.webp);--ar:381/432;--bs:351.97% 146.06%;--bx:0.31% 0.00%;--crop-max:305px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Alla barnfamiljer får <strong>barnbidrag</strong> från <strong>Försäkringskassan</strong>, och familjer med flera barn får <strong>flerbarnstillägg</strong>.</p><p>Från 16 år får den som går på <strong>gymnasiet</strong> <strong>studiebidrag</strong>.</p><p>Den som läser på <strong>högskolan</strong> kan få <strong>studiemedel</strong> från <strong>CSN</strong>. Det är mest lån och en liten del bidrag.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Vuxen" style="background-image:url(kort02.webp);--ar:538/432;--bs:249.26% 146.06%;--bx:51.56% 0.00%;--crop-max:430px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Den som är <strong>sjuk</strong> och inte kan arbeta får <strong>sjukpenning</strong>.</p><p>Föräldrar får <strong>föräldrapenning</strong> när de är hemma med sina barn.</p><p>Den som behöver hjälp med hyran kan få <strong>bostadsbidrag</strong>.</p><p>Den som blir <strong>arbetslös</strong> kan få pengar från <strong>a-kassan</strong>, men bara om man har varit <strong>medlem</strong> och betalat avgift.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Äldre" style="background-image:url(kort02.webp);--ar:357/432;--bs:375.63% 146.06%;--bx:99.70% 0.00%;--crop-max:286px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Från <strong>62 år</strong> får man börja ta ut <strong>pension</strong>.</p><p>Pensionen består av tre delar: <strong>allmän pension</strong>, <strong>tjänstepension</strong> från arbetsgivaren och <strong>eget sparande</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Skyddsnätet</p><p>Om inget annat räcker kan man få <strong>försörjningsstöd</strong> från <strong>kommunens socialtjänst</strong>. Det ska räcka till <strong>mat, kläder och hygien</strong>.</p></div><div class="extra"><p class="extra-label">Exempel</p><p>Om en förälder blir sjuk och inte kan arbeta får hen <strong>sjukpenning</strong>, så att familjen ändå har pengar.</p></div><div class="extra"><p class="extra-label">Förr</p><p>De fattigaste bodde i <strong>fattigstugor</strong>. På <strong>1930-talet</strong> ville statsminister <strong>Per Albin Hansson</strong> bygga ett <strong>folkhem</strong> där alla är trygga.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>Boken skriver 62 år. Sedan 2026 får man ta ut allmän pension tidigast vid <strong>64 år</strong>, och man har rätt att jobba kvar till <strong>69 år</strong>.</p></div></div></article><article class="board" id="kort-3" aria-labelledby="kort-3-fraga"><div class="board-head"><span>Kort 3</span><span>I boken: s. 98</span></div><h3 class="question" id="kort-3-fraga">Vilka för- och nackdelar finns det med privatiseringar i välfärden?</h3><div class="lead"><p><strong>Privatisering</strong> betyder att <strong>privata företag</strong> driver välfärdstjänster, till exempel <strong>friskolor, äldreboenden, hemtjänst och vårdcentraler</strong>. Det började på <strong>1990-talet</strong>.</p></div><div class="figure figure--steps" style="max-width:1028px"><img class="figure-img" src="kort03.webp" width="1323" height="721" loading="lazy" alt="Infografik till kort 3: Vilka för- och nackdelar finns det med privatiseringar i välfärden?"><div class="steps" style="grid-template-columns:3fr 403fr 63fr 387fr 61fr 404fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Skattepengar" style="background-image:url(kort03.webp);--ar:403/721;--bs:328.29% 100.00%;--bx:0.33% 0.00%;--crop-max:322px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Verksamheten betalas ändå med <strong>skattepengar</strong>.</p><p>När man väljer en privat skola eller vårdcentral får företaget pengarna från <strong>kommunen</strong> eller <strong>regionen</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="För" style="background-image:url(kort03.webp);--ar:387/721;--bs:341.86% 100.00%;--bx:50.11% 0.00%;--crop-max:310px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Privata företag kan arbeta <strong>effektivare</strong>.</p><p><strong>Konkurrens</strong> mellan till exempel skolor kan ge <strong>högre kvalitet</strong>.</p><p>Människor får <strong>valfrihet</strong> att själva välja skola och vårdcentral.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Emot" style="background-image:url(kort03.webp);--ar:404/721;--bs:327.48% 100.00%;--bx:99.78% 0.00%;--crop-max:323px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Vissa företag tar ut <strong>stora vinster</strong> genom att ha <strong>mindre personal</strong> eller <strong>sämre kvalitet</strong>.</p><p><strong>Skattepengar</strong> ska gå till välfärden och <strong>inte till företagsägare</strong>.</p><p>Samhället måste ge välfärd till <strong>alla</strong>, även i <strong>glesbygd</strong> där det är svårt att tjäna pengar.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>Går du i en <strong>friskola</strong> betalar kommunen din <strong>skolpeng</strong> till friskolan i stället för till den kommunala skolan.</p></div><div class="extra"><p class="extra-label">Debatten</p><p>Politikerna är <strong>oense</strong>, och frågan om <strong>vinster i välfärden</strong> debatteras fortfarande.</p></div><div class="extra"><p class="extra-label">Provtips</p><p>Skriv <strong>minst två fördelar</strong> och <strong>två nackdelar</strong>.</p></div></div></article></section><section id="del-2" aria-labelledby="del-2-titel"><h2 class="part-title" id="del-2-titel">Del 2 <span>Kommun, region och stat</span></h2><article class="board" id="kort-4" aria-labelledby="kort-4-fraga"><div class="board-head"><span>Kort 4</span><span>I boken: s. 92–93</span></div><h3 class="question" id="kort-4-fraga">Vilka är kommunens viktigaste uppgifter?</h3><div class="lead"><p>Sverige har <strong>290 kommuner</strong>. Kommunen sköter det som finns <strong>nära dig i vardagen</strong>.</p></div><div class="figure figure--steps" style="max-width:1120px"><img class="figure-img" src="kort04.webp" width="1358" height="679" loading="lazy" alt="Infografik till kort 4: Vilka är kommunens viktigaste uppgifter?"><div class="steps" style="grid-template-columns:2fr 324fr 30fr 529fr 30fr 441fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Kommunen" style="background-image:url(kort04.webp);--ar:324/679;--bs:419.14% 100.00%;--bx:0.19% 0.00%;--crop-max:259px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Besluten fattas av <strong>kommunfullmäktige</strong>, som är <strong>folkvalt</strong>.</p><p>Kommunfullmäktige bestämmer bland annat hur hög <strong>kommunalskatten</strong> ska vara.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Välfärd" style="background-image:url(kort04.webp);--ar:529/679;--bs:256.71% 100.00%;--bx:42.94% 0.00%;--crop-max:423px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Kommunen ansvarar för <strong>skolan</strong>: grundskola, gymnasium och vuxenutbildning.</p><p>Kommunen ansvarar för <strong>förskolan</strong> och dagbarnvårdare.</p><p>Kommunen tar hand om <strong>äldre</strong> genom <strong>äldreboenden</strong> och <strong>hemtjänst</strong>.</p><p>Kommunen ger stöd till <strong>funktionsvarierade</strong>, till exempel personlig assistans.</p><p>Kommunens <strong>socialtjänst</strong> betalar ut <strong>försörjningsstöd</strong> och hjälper barn och familjer som har det svårt.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Andra uppgifter" style="background-image:url(kort04.webp);--ar:441/679;--bs:307.94% 100.00%;--bx:99.78% 0.00%;--crop-max:353px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Kommunen sköter också <strong>sophämtning</strong>, <strong>vatten och avlopp</strong>, <strong>vägar</strong> och <strong>räddningstjänst</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Kommunen <strong>äger skolorna</strong>, men <strong>staten</strong> bestämmer <strong>skollagen</strong> och läroplanerna.</p></div><div class="extra"><p class="extra-label">Exempel</p><p>När brandkåren rycker ut är det kommunens <strong>räddningstjänst</strong> som kommer.</p></div></div></article><article class="board" id="kort-5" aria-labelledby="kort-5-fraga"><div class="board-head"><span>Kort 5</span><span>I boken: s. 94</span></div><h3 class="question" id="kort-5-fraga">Hur får kommunen sina inkomster?</h3><div class="lead"><p>Kommunen får sina pengar från <strong>tre</strong> håll: <strong>kommunalskatt</strong>, <strong>statsbidrag</strong> och <strong>avgifter</strong>.</p></div><div class="figure figure--steps" style="max-width:1160px"><img class="figure-img" src="kort05.webp" width="1348" height="651" loading="lazy" alt="Infografik till kort 5: Hur får kommunen sina inkomster?"><div class="steps" style="grid-template-columns:3fr 609fr 49fr 307fr 40fr 338fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Kommunalskatt" style="background-image:url(kort05.webp);--ar:609/506;--bs:221.35% 128.66%;--bx:0.41% 0.00%;--crop-max:487px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Den <strong>största</strong> inkomsten är <strong>kommunalskatten</strong>.</p><p>Den är ungefär <strong>20 %</strong>, alltså <strong>20 kronor</strong> av varje hundralapp du tjänar.</p><p><strong>Kommunfullmäktige</strong> bestämmer hur hög den ska vara.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Statsbidrag" style="background-image:url(kort05.webp);--ar:307/506;--bs:439.09% 128.66%;--bx:63.50% 0.00%;--crop-max:246px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Kommunen får också pengar från <strong>staten</strong>.</p><p><strong>Generella</strong> statsbidrag får alla kommuner.</p><p><strong>Riktade</strong> statsbidrag ska användas till något särskilt, till exempel förskolan eller lärarlöner. Dem måste kommunen <strong>söka</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Avgifter" style="background-image:url(kort05.webp);--ar:338/506;--bs:398.82% 128.66%;--bx:99.80% 0.00%;--crop-max:270px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Invånarna betalar <strong>avgifter</strong> för vissa tjänster.</p><p>Det gäller till exempel <strong>sophämtning</strong>, <strong>vatten och avlopp</strong> och en del av <strong>barnomsorgen</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p><strong>Fattiga</strong> kommuner får <strong>mer</strong> statsbidrag och <strong>rika</strong> kommuner får <strong>mindre</strong>, så att alla ska kunna ge bra välfärd.</p></div></div></article><article class="board" id="kort-6" aria-labelledby="kort-6-fraga"><div class="board-head"><span>Kort 6</span><span>I boken: s. 95</span></div><h3 class="question" id="kort-6-fraga">Vilka är regionens viktigaste uppgifter?</h3><div class="lead"><p>Sverige har <strong>21 regioner</strong>. Regionerna sköter sådant som är så <strong>dyrt</strong> att <strong>större områden</strong> måste samarbeta. Förr hette de <strong>landsting</strong>.</p></div><div class="figure figure--steps" style="max-width:1062px"><img class="figure-img" src="kort06.webp" width="1346" height="710" loading="lazy" alt="Infografik till kort 6: Vilka är regionens viktigaste uppgifter?"><div class="steps" style="grid-template-columns:2fr 315fr 41fr 591fr 41fr 353fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Regionen" style="background-image:url(kort06.webp);--ar:315/710;--bs:427.30% 100.00%;--bx:0.19% 0.00%;--crop-max:252px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Besluten fattas av <strong>regionfullmäktige</strong>, som är <strong>folkvalt</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Uppgifter" style="background-image:url(kort06.webp);--ar:591/710;--bs:227.75% 100.00%;--bx:47.42% 0.00%;--crop-max:473px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Regionen ansvarar för <strong>hälso- och sjukvård</strong> och <strong>tandvård</strong>.</p><p>Regionen ansvarar också för <strong>kollektivtrafiken</strong>.</p><p>Regionen arbetar med <strong>utveckling</strong> tillsammans med kommuner, företag och föreningar.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Inkomster" style="background-image:url(kort06.webp);--ar:353/710;--bs:381.30% 100.00%;--bx:99.70% 0.00%;--crop-max:282px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Invånarna betalar <strong>regionskatt</strong> (i boken <strong>landstingsskatt</strong>), som brukar vara ungefär <strong>10 %</strong>.</p><p>Regionen får också <strong>statsbidrag</strong> från staten.</p><p>Dessutom betalar invånarna <strong>avgifter</strong>, till exempel för besök på <strong>vårdcentralen</strong> eller för att åka <strong>buss</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>När du går till <strong>vårdcentralen</strong> eller åker <strong>buss</strong> är det regionen som ansvarar.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>Varje region bestämmer <strong>själv</strong> hur hög regionskatten ska vara.</p></div></div></article><article class="board" id="kort-7" aria-labelledby="kort-7-fraga"><div class="board-head"><span>Kort 7</span><span>I boken: s. 96–97</span></div><h3 class="question" id="kort-7-fraga">Vilka uppgifter har staten?</h3><div class="lead"><p><strong>Staten</strong> är landets <strong>högsta beslutande och styrande makt</strong>. Den ansvarar för sådant som rör <strong>alla</strong> i Sverige.</p></div><div class="figure figure--steps" style="max-width:1056px"><img class="figure-img" src="kort07.webp" width="1341" height="711" loading="lazy" alt="Infografik till kort 7: Vilka uppgifter har staten?"><div class="steps" style="grid-template-columns:2fr 293fr 46fr 630fr 47fr 320fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Staten" style="background-image:url(kort07.webp);--ar:293/711;--bs:457.68% 100.00%;--bx:0.19% 0.00%;--crop-max:234px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Staten består av <strong>riksdag</strong>, <strong>regering</strong> och <strong>myndigheter</strong>.</p><p>Myndigheterna genomför det som riksdagen och regeringen har bestämt.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Uppgifter" style="background-image:url(kort07.webp);--ar:630/711;--bs:212.86% 100.00%;--bx:47.96% 0.00%;--crop-max:504px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Staten betalar ut <strong>bidrag och ersättningar</strong> genom <strong>Försäkringskassan</strong>.</p><p><strong>Pensionsmyndigheten</strong> betalar ut <strong>pensionen</strong> och <strong>CSN</strong> betalar ut <strong>studiemedel</strong>.</p><p>Staten ansvarar för <strong>polisen</strong>, <strong>domstolarna</strong> och <strong>försvaret</strong>, och för att alla är <strong>lika inför lagen</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Inkomster" style="background-image:url(kort07.webp);--ar:320/711;--bs:419.06% 100.00%;--bx:99.71% 0.00%;--crop-max:256px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>De som <strong>tjänar mest</strong> betalar <strong>statlig skatt</strong>.</p><p>Staten får <strong>moms</strong> när vi köper något och <strong>bolagsskatt</strong> på företagens vinst.</p><p>Staten tar också ut <strong>kapitalskatt</strong>, till exempel på ränta, och <strong>punktskatt</strong> på tobak, alkohol och bensin.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Statens <strong>största utgift</strong> är <strong>statsbidrag</strong> till kommuner och regioner.</p></div><div class="extra"><p class="extra-label">Exempel</p><p>Blir du sjuk som vuxen får du <strong>sjukpenning</strong> från <strong>Försäkringskassan</strong>, som är en statlig myndighet.</p></div></div></article></section><section id="del-3" aria-labelledby="del-3-titel"><h2 class="part-title" id="del-3-titel">Del 3 <span>Ekonomiska kretsloppet</span></h2><article class="board" id="kort-8" aria-labelledby="kort-8-fraga"><div class="board-head"><span>Kort 8</span><span>I boken: s. 255–256</span></div><h3 class="question" id="kort-8-fraga">Vad är det ekonomiska kretsloppet?</h3><div class="lead"><p>Det <strong>ekonomiska kretsloppet</strong> beskriver hur <strong>pengar rör sig</strong> i samhället och hur allt <strong>hänger ihop</strong>.</p><p>Kretsloppet har fyra aktörer: <strong>hushåll, företag, banker och offentlig sektor</strong>.</p></div><div class="figure figure-scroll" style="max-width:956px"><div class="figure-inner"><img class="figure-img" src="kort08.webp" width="1267" height="742" loading="lazy" alt="Infografik till kort 8: Vad är det ekonomiska kretsloppet?"></div></div><div class="boxes"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p class="box-title">Hushåll</p><p>Hushållen <strong>arbetar</strong> i företagen och får <strong>lön</strong>.</p><p>För lönen <strong>konsumerar</strong> de varor och tjänster.</p></div><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p class="box-title">Företag</p><p>Företagen <strong>producerar varor och tjänster</strong>.</p><p>De betalar <strong>löner</strong> till dem som arbetar.</p></div><div class="box" style="--c:var(--sektor);--t:var(--sektor-tint)"><p class="box-title">Offentlig sektor</p><p>Hushåll och företag betalar <strong>skatt</strong> till den offentliga sektorn.</p><p>Tillbaka får de <strong>service och bidrag</strong>, till exempel skola, vård och barnbidrag.</p></div><div class="box" style="--c:var(--lila);--t:var(--lila-tint)"><p class="box-title">Banker</p><p>Hushåll och företag <strong>sparar</strong> på banken och får <strong>ränta</strong>.</p><p>Banken <strong>lånar ut</strong> pengar till den som behöver.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Därför är det viktigt</p><p>Alla delar är <strong>beroende av varandra</strong>. Om en del slutar fungera påverkas <strong>alla de andra</strong>.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>Delen mellan hushåll och företag kallas ibland <strong>den lilla ekonomin</strong>.</p></div></div></article><article class="board" id="kort-9" aria-labelledby="kort-9-fraga"><div class="board-head"><span>Kort 9</span><span>I boken: s. 256–257</span></div><h3 class="question" id="kort-9-fraga">Vad bidrar hushållen med, varifrån kommer deras pengar och vad konsumerar de?</h3><div class="lead"><p>Ett <strong>hushåll</strong> är en person, en familj eller en grupp som <strong>bor tillsammans</strong> och hjälps åt med sin försörjning.</p></div><div class="figure figure--steps" style="max-width:1182px"><img class="figure-img" src="kort09.webp" width="1347" height="638" loading="lazy" alt="Infografik till kort 9: Vad bidrar hushållen med, varifrån kommer deras pengar och vad konsumerar de?"><div class="steps" style="grid-template-columns:3fr 410fr 54fr 412fr 55fr 410fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Arbete" style="background-image:url(kort09.webp);--ar:410/638;--bs:328.54% 100.00%;--bx:0.32% 0.00%;--crop-max:328px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Hushållen bidrar med sin <strong>arbetskraft</strong> till företagen och den offentliga sektorn.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Inkomster" style="background-image:url(kort09.webp);--ar:412/638;--bs:326.94% 100.00%;--bx:49.95% 0.00%;--crop-max:330px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Det vanligaste sättet att få pengar är <strong>förvärvsarbete</strong>, alltså att arbeta och få <strong>lön</strong>.</p><p>Hushållen kan också få <strong>bidrag</strong>, till exempel <strong>barnbidrag</strong> och <strong>bostadsbidrag</strong>.</p><p>Ungefär <strong>en tredjedel</strong> arbetar i stora företag, en tredjedel i <strong>småföretag</strong> och en tredjedel i den <strong>offentliga sektorn</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Konsumtion" style="background-image:url(kort09.webp);--ar:410/638;--bs:328.54% 100.00%;--bx:99.68% 0.00%;--crop-max:328px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>För lönen <strong>konsumerar</strong> hushållen <strong>varor</strong> och <strong>tjänster</strong>.</p><p>En vara är något man kan ta på, som mat. En tjänst är service, som en klippning.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>En förälder jobbar på en fabrik, får <strong>lön</strong> och köper mat. Då går pengarna vidare till <strong>företagen</strong>, som kan betala nya löner.</p></div></div></article><article class="board" id="kort-10" aria-labelledby="kort-10-fraga"><div class="board-head"><span>Kort 10</span><span>I boken: s. 257</span></div><h3 class="question" id="kort-10-fraga">Vad är skatt och vad används den till?</h3><div class="lead"><p><strong>Skatt</strong> är pengar som vi betalar till <strong>stat, region och kommun</strong> för att betala samhällets <strong>gemensamma kostnader</strong>.</p></div><div class="figure figure--steps" style="max-width:1200px"><img class="figure-img" src="kort10.webp" width="1341" height="622" loading="lazy" alt="Infografik till kort 10: Vad är skatt och vad används den till?"><div class="steps" style="grid-template-columns:3fr 352fr 27fr 352fr 29fr 576fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Lön" style="background-image:url(kort10.webp);--ar:352/622;--bs:380.97% 100.00%;--bx:0.30% 0.00%;--crop-max:282px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Alla som tjänar pengar betalar <strong>inkomstskatt</strong> på sin lön.</p><p>Den brukar vara mellan <strong>30 och 35 %</strong> av inkomsten och skiljer sig mellan kommuner.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Mottagare" style="background-image:url(kort10.webp);--ar:352/622;--bs:380.97% 100.00%;--bx:38.62% 0.00%;--crop-max:282px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Inkomstskatten går <strong>i första hand</strong> till <strong>kommunen</strong> och <strong>regionen</strong>.</p><p>Den som <strong>tjänar mest</strong> betalar också <strong>statlig skatt</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Används till" style="background-image:url(kort10.webp);--ar:576/622;--bs:232.81% 100.00%;--bx:99.74% 0.00%;--crop-max:461px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Skatten betalar sådant vi har <strong>gemensamt</strong>, till exempel <strong>vägar, skolor, polis, sjukvård och försvar</strong>.</p><p>Den betalar också <strong>socialt skydd</strong> för dem som har det svårast.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>På lönebeskedet i bilden går <strong>10 400 kr</strong> av <strong>32 000 kr</strong> till skatt.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>Vi betalar också skatt när vi <strong>köper</strong> saker, till exempel <strong>moms</strong>.</p></div></div></article><article class="board" id="kort-11" aria-labelledby="kort-11-fraga"><div class="board-head"><span>Kort 11</span><span>I boken: s. 258</span></div><h3 class="question" id="kort-11-fraga">Vilken är den största delen av ett hushålls utgifter?</h3><div class="lead"><p>Den största delen av ett hushålls utgifter är <strong>boendet</strong>, till exempel <strong>hyra</strong> eller <strong>bolån</strong>.</p></div><div class="figure figure--steps" style="max-width:1050px"><img class="figure-img" src="kort11.webp" width="1294" height="690" loading="lazy" alt="Infografik till kort 11: Vilken är den största delen av ett hushålls utgifter?"><div class="steps" style="grid-template-columns:2fr 846fr 21fr 422fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Utgifter" style="background-image:url(kort11.webp);--ar:846/690;--bs:152.96% 100.00%;--bx:0.45% 0.00%;--crop-max:677px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Den <strong>största</strong> utgiften är <strong>boendet</strong>.</p><p>Hushållen lägger också pengar på <strong>mat, transporter, fritid och kläder</strong>.</p><p>Andra utgifter är till exempel <strong>försäkringar</strong>, <strong>sophämtning</strong> och <strong>bredband</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Skulder" style="background-image:url(kort11.webp);--ar:422/690;--bs:306.64% 100.00%;--bx:99.66% 0.00%;--crop-max:338px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Ett hushåll som har <strong>högre utgifter än inkomster</strong> lever över sina tillgångar.</p><p>Då får hushållet <strong>skulder</strong> och blir <strong>skuldsatt</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Hushållen är viktiga eftersom de både <strong>arbetar</strong> och <strong>konsumerar</strong>. Det håller <strong>företagen</strong> och <strong>kretsloppet</strong> igång.</p></div></div></article><article class="board" id="kort-12" aria-labelledby="kort-12-fraga"><div class="board-head"><span>Kort 12</span><span>I boken: s. 259–261</span></div><h3 class="question" id="kort-12-fraga">Vilken roll har företagen i samhällets ekonomi?</h3><div class="lead"><p>Företagens viktigaste uppgift är att skapa <strong>varor, tjänster och arbetstillfällen</strong>.</p><p>Utan företag stannar <strong>konsumtionen</strong>, och många <strong>jobb</strong> försvinner.</p></div><div class="figure figure--steps" style="max-width:1047px"><img class="figure-img" src="kort12.webp" width="1337" height="715" loading="lazy" alt="Infografik till kort 12: Vilken roll har företagen i samhällets ekonomi?"><div class="steps" style="grid-template-columns:2fr 402fr 66fr 399fr 66fr 400fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Produktionsfaktorer" style="background-image:url(kort12.webp);--ar:402/715;--bs:332.59% 100.00%;--bx:0.21% 0.00%;--crop-max:322px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>För att producera behöver företagen <strong>produktionsfaktorer</strong>.</p><p><strong>Naturresurser</strong> är tillgångar från naturen, till exempel <strong>olja</strong> eller <strong>trä</strong>.</p><p><strong>Kapital</strong> är pengar, aktier, <strong>maskiner</strong> och <strong>byggnader</strong>.</p><p><strong>Arbetskraft</strong> är <strong>människorna</strong> som arbetar.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Företaget" style="background-image:url(kort12.webp);--ar:399/715;--bs:335.09% 100.00%;--bx:50.11% 0.00%;--crop-max:319px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Företaget använder produktionsfaktorerna i sin <strong>produktion</strong>.</p><p>Målet är att <strong>tjäna pengar</strong> och gå med <strong>vinst</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Skapar" style="background-image:url(kort12.webp);--ar:400/715;--bs:334.25% 100.00%;--bx:99.79% 0.00%;--crop-max:320px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Produktionen ger <strong>varor</strong> och <strong>tjänster</strong> som hushållen kan köpa.</p><p>Den skapar också <strong>jobb</strong>, så att människor får <strong>lön</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p><strong>Tiina</strong> är snickare och startar ett <strong>byggföretag</strong>. Hon behöver verktyg och fordon (<strong>kapital</strong>), sin egen <strong>arbetskraft</strong> och material.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>Vanliga företagsformer är <strong>enskild firma</strong>, <strong>handelsbolag</strong> och <strong>aktiebolag</strong>.</p></div></div></article><article class="board" id="kort-13" aria-labelledby="kort-13-fraga"><div class="board-head"><span>Kort 13</span><span>I boken: s. 259</span></div><h3 class="question" id="kort-13-fraga">Vilka sätt finns det för ett företag att få kapital?</h3><div class="lead"><p>För att ett företag ska kunna producera behöver någon <strong>investera</strong> pengar i det. Det finns <strong>tre</strong> vanliga sätt att få <strong>kapital</strong>.</p></div><div class="figure figure-scroll" style="max-width:1030px"><div class="figure-inner"><img class="figure-img" src="kort13.webp" width="1315" height="715" loading="lazy" alt="Infografik till kort 13: Vilka sätt finns det för ett företag att få kapital?"></div></div><div class="boxes"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p class="box-title"><span class="box-num">1</span>Eget sparande</p><p>Ägaren använder sina egna <strong>sparade pengar</strong>.</p></div><div class="box" style="--c:var(--sektor);--t:var(--sektor-tint)"><p class="box-title"><span class="box-num">2</span>Banklån</p><p>Företaget <strong>lånar</strong> pengar av en <strong>bank</strong>.</p><p>Lånet måste <strong>betalas tillbaka</strong> med <strong>ränta</strong>.</p></div><div class="box" style="--c:var(--lila);--t:var(--lila-tint)"><p class="box-title"><span class="box-num">3</span>Riskkapitalbolag</p><p>Ett <strong>riskkapitalbolag</strong> satsar pengar på företagets affärsidé.</p><p>I gengäld får bolaget <strong>en del av den framtida vinsten</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>Tiina betalade sitt byggföretag med både <strong>sparade pengar</strong> och ett <strong>banklån</strong>.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>En <strong>investering</strong> är pengar som satsas i ett företag för att ge <strong>vinst i framtiden</strong>.</p></div></div></article><article class="board" id="kort-14" aria-labelledby="kort-14-fraga"><div class="board-head"><span>Kort 14</span><span>I boken: s. 260</span></div><h3 class="question" id="kort-14-fraga">Vad händer i samhället när företag går bra, och när de går dåligt?</h3><div class="lead"><p>Det är viktigt för hela samhället att <strong>företagen går med vinst</strong>, eftersom det påverkar <strong>jobb, konsumtion och skatt</strong>.</p></div><div class="figure figure--steps" style="max-width:726px"><img class="figure-img" src="kort14.webp" width="980" height="756" loading="lazy" alt="Infografik till kort 14: Vad händer i samhället när företag går bra, och när de går dåligt?"><div class="steps" style="grid-template-columns:3fr 468fr 39fr 467fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Vinst" style="background-image:url(kort14.webp);--ar:468/756;--bs:209.40% 100.00%;--bx:0.59% 0.00%;--crop-max:374px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>När företagen går bra kan de <strong>anställa fler</strong>.</p><p>De som får jobb kan <strong>konsumera mer</strong> och betalar <strong>skatt</strong>.</p><p><strong>Arbetslösheten minskar</strong>, och det blir en <strong>positiv utveckling</strong> för hela samhället.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Förlust" style="background-image:url(kort14.webp);--ar:467/756;--bs:209.85% 100.00%;--bx:99.42% 0.00%;--crop-max:374px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>När företagen går dåligt måste de <strong>säga upp personal</strong> eller spara på andra sätt.</p><p>Fler blir <strong>arbetslösa</strong>, och samhällets <strong>kostnader ökar</strong> när fler behöver <strong>bidrag</strong>.</p><p>Ett företag som inte kan betala sina <strong>skulder</strong> går i <strong>konkurs</strong> och måste <strong>lägga ner</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Ett företag går med <strong>vinst</strong> när <strong>inkomsterna är större än utgifterna</strong>.</p></div><div class="extra"><p class="extra-label">Provtips</p><p>Visa <strong>kedjan</strong>: vad händer först, och vad leder det till?</p></div></div></article><article class="board" id="kort-15" aria-labelledby="kort-15-fraga"><div class="board-head"><span>Kort 15</span><span>I boken: s. 262</span></div><h3 class="question" id="kort-15-fraga">Vad gör bankerna?</h3><div class="lead"><p>Bankerna tar hand om våra <strong>pengar</strong>. De fungerar som ett <strong>smörjmedel</strong> för de andra delarna i kretsloppet.</p></div><div class="figure figure--steps" style="max-width:1060px"><img class="figure-img" src="kort15.webp" width="1314" height="694" loading="lazy" alt="Infografik till kort 15: Vad gör bankerna?"><div class="steps" style="grid-template-columns:3fr 421fr 30fr 405fr 31fr 421fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Spara" style="background-image:url(kort15.webp);--ar:421/694;--bs:312.11% 100.00%;--bx:0.34% 0.00%;--crop-max:337px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Hushåll, företag och offentlig sektor <strong>sparar</strong> pengar på banken.</p><p>För det får de <strong>ränta</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Banken" style="background-image:url(kort15.webp);--ar:405/694;--bs:324.44% 100.00%;--bx:49.94% 0.00%;--crop-max:324px"></div><div class="box box--aligned" style="--c:var(--lila);--t:var(--lila-tint)"><p>Banken använder de sparade pengarna till att <strong>låna ut</strong>.</p><p>Utan bankerna skulle de andra delarna i kretsloppet ha <strong>svårt att fungera</strong> tillsammans.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Låna" style="background-image:url(kort15.webp);--ar:421/694;--bs:312.11% 100.00%;--bx:99.66% 0.00%;--crop-max:337px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Den som behöver <strong>finansiera</strong> något kan <strong>låna</strong> pengar av banken.</p><p>Lånet ska betalas tillbaka, och man betalar <strong>ränta</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p><strong>Ränta</strong> är det man <strong>betalar för att låna</strong> pengar, eller det man <strong>får för att spara</strong>.</p></div><div class="extra"><p class="extra-label">Exempel</p><p>En familj <strong>lånar</strong> till ett hus, och ett företag lånar till nya <strong>maskiner</strong>.</p></div></div></article><article class="board" id="kort-16" aria-labelledby="kort-16-fraga"><div class="board-head"><span>Kort 16</span><span>I boken: s. 262</span></div><h3 class="question" id="kort-16-fraga">Vad gör den offentliga sektorn?</h3><div class="lead"><p>Till den <strong>offentliga sektorn</strong> räknas allt som görs av <strong>stat, region och kommun</strong>.</p></div><div class="figure figure--steps" style="max-width:1200px"><img class="figure-img" src="kort16.webp" width="1355" height="596" loading="lazy" alt="Infografik till kort 16: Vad gör den offentliga sektorn?"><div class="steps" style="grid-template-columns:3fr 335fr 49fr 382fr 47fr 536fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Tar in" style="background-image:url(kort16.webp);--ar:335/596;--bs:404.48% 100.00%;--bx:0.29% 0.00%;--crop-max:268px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Hushåll och företag betalar <strong>skatt</strong> till den offentliga sektorn.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Offentlig sektor" style="background-image:url(kort16.webp);--ar:382/596;--bs:354.71% 100.00%;--bx:39.77% 0.00%;--crop-max:306px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Pengarna går till <strong>staten, regionerna och kommunerna</strong>.</p><p>Ungefär <strong>en av tre</strong> som arbetar i Sverige jobbar i den offentliga sektorn.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Ger tillbaka" style="background-image:url(kort16.webp);--ar:536/596;--bs:252.80% 100.00%;--bx:99.63% 0.00%;--crop-max:429px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Den offentliga sektorn ger <strong>service</strong>, till exempel <strong>sjukvård, skola och kollektivtrafik</strong>.</p><p>Den bygger <strong>vägar</strong>, sköter <strong>rättsväsendet</strong> och betalar ut olika <strong>bidrag</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>En <strong>sjuksköterska</strong> på sjukhuset och en <strong>polis</strong> arbetar i den offentliga sektorn.</p></div></div></article></section><section id="del-4" aria-labelledby="del-4-titel"><h2 class="part-title" id="del-4-titel">Del 4 <span>Begrepp</span></h2><article class="board" id="kort-17" aria-labelledby="kort-17-fraga"><div class="board-head"><span>Kort 17</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-17-fraga">Vad är en konsument?</h3><div class="lead"><p>En <strong>konsument</strong> är en person som <strong>köper och använder</strong> varor och tjänster.</p></div><div class="figure" style="max-width:1030px"><div class="figure-inner"><img class="figure-img" src="kort17.webp" width="1291" height="702" loading="lazy" alt="Infografik till kort 17: Vad är en konsument?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Konsumenten köper <strong>varor</strong>, till exempel en läsk eller en tröja.</p><p>Konsumenten använder också <strong>tjänster</strong>, till exempel när man går till <strong>frisören</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>När du köper en läsk i affären är <strong>du</strong> konsument.</p></div><div class="extra"><p class="extra-label">Motsats</p><p>Den som tillverkar eller säljer kallas <strong>producent</strong>.</p></div></div></article><article class="board" id="kort-18" aria-labelledby="kort-18-fraga"><div class="board-head"><span>Kort 18</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-18-fraga">Vad är en producent?</h3><div class="lead"><p>En <strong>producent</strong> är den som <strong>tillverkar eller säljer</strong> varor och tjänster.</p></div><div class="figure" style="max-width:1144px"><div class="figure-inner"><img class="figure-img" src="kort18.webp" width="1342" height="657" loading="lazy" alt="Infografik till kort 18: Vad är en producent?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>En <strong>fabrik</strong> som gör <strong>mobiltelefoner</strong> är en producent.</p><p>Ett <strong>bageri</strong> som bakar och säljer <strong>bröd</strong> är också en producent.</p><p>Producenten säljer till <strong>konsumenten</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Producenter vill sälja när <strong>priset är högt</strong>, och konsumenter vill köpa när <strong>priset är lågt</strong>.</p></div></div></article><article class="board" id="kort-19" aria-labelledby="kort-19-fraga"><div class="board-head"><span>Kort 19</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-19-fraga">Vad är offentlig sektor?</h3><div class="lead"><p><strong>Offentlig sektor</strong> är den del av samhället som <strong>staten, regionerna och kommunerna</strong> ansvarar för.</p></div><div class="figure" style="max-width:1049px"><div class="figure-inner"><img class="figure-img" src="kort19.webp" width="1354" height="723" loading="lazy" alt="Infografik till kort 19: Vad är offentlig sektor?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Den offentliga sektorn ansvarar till exempel för <strong>skolor, sjukhus och polis</strong>.</p><p>Den betalas med <strong>skatt</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Motsats</p><p>Det som ägs och drivs av företag och privatpersoner kallas <strong>privat sektor</strong>.</p></div></div></article><article class="board" id="kort-20" aria-labelledby="kort-20-fraga"><div class="board-head"><span>Kort 20</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-20-fraga">Vad är inkomstskatt?</h3><div class="lead"><p><strong>Inkomstskatt</strong> är den skatt du betalar på din <strong>lön</strong>.</p></div><div class="figure" style="max-width:1084px"><div class="figure-inner"><img class="figure-img" src="kort20.webp" width="1347" height="696" loading="lazy" alt="Infografik till kort 20: Vad är inkomstskatt?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Den brukar vara <strong>30–35 %</strong> av lönen.</p><p>Pengarna går till <strong>kommunen</strong> och <strong>regionen</strong>, och den som tjänar mest betalar också till <strong>staten</strong>.</p><p>Pengarna betalar gemensamma saker, till exempel skola och vård.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Inkomstskatt är en <strong>direkt skatt</strong>, eftersom den dras <strong>direkt från lönen</strong>.</p></div></div></article><article class="board" id="kort-21" aria-labelledby="kort-21-fraga"><div class="board-head"><span>Kort 21</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-21-fraga">Vad är moms?</h3><div class="lead"><p><strong>Moms</strong> (mervärdesskatt) är en skatt som läggs på <strong>nästan allt du köper</strong>.</p></div><div class="figure" style="max-width:1049px"><div class="figure-inner"><img class="figure-img" src="kort21.webp" width="1351" height="721" loading="lazy" alt="Infografik till kort 21: Vad är moms?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Momsen <strong>ingår i priset</strong> du betalar i affären.</p><p>Pengarna går till <strong>staten</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>En tröja kostar <strong>200 kr</strong>. Av det är <strong>40 kr moms</strong>.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>Moms är en <strong>indirekt skatt</strong>, eftersom man betalar den när man <strong>köper</strong> något.</p></div></div></article><article class="board" id="kort-22" aria-labelledby="kort-22-fraga"><div class="board-head"><span>Kort 22</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-22-fraga">Vad är punktskatt?</h3><div class="lead"><p><strong>Punktskatt</strong> är en <strong>extra skatt</strong> på vissa varor, till exempel <strong>tobak, alkohol och bensin</strong>.</p></div><div class="figure" style="max-width:893px"><div class="figure-inner"><img class="figure-img" src="kort22.webp" width="1170" height="734" loading="lazy" alt="Infografik till kort 22: Vad är punktskatt?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Varorna är <strong>skadliga</strong> för oss eller för <strong>miljön</strong>.</p><p>Den extra skatten gör varorna <strong>dyrare</strong>, så att människor ska använda <strong>mindre</strong> av dem.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Punktskatten går till <strong>staten</strong>.</p></div></div></article><article class="board" id="kort-23" aria-labelledby="kort-23-fraga"><div class="board-head"><span>Kort 23</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-23-fraga">Vad är arbetsgivaravgifter?</h3><div class="lead"><p><strong>Arbetsgivaravgifter</strong> är pengar som <strong>arbetsgivaren</strong> betalar till <strong>staten</strong> utöver din <strong>lön</strong>.</p></div><div class="figure" style="max-width:1042px"><div class="figure-inner"><img class="figure-img" src="kort23.webp" width="1344" height="722" loading="lazy" alt="Infografik till kort 23: Vad är arbetsgivaravgifter?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Arbetsgivaren betalar <strong>lön</strong> till den anställda.</p><p>Utöver lönen betalar arbetsgivaren <strong>arbetsgivaravgifter</strong> till staten.</p><p>Pengarna används bland annat till <strong>pensioner</strong> och <strong>sjukförsäkring</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Det är <strong>arbetsgivaren</strong> som betalar avgifterna, <strong>inte</strong> den anställda.</p></div></div></article><article class="board" id="kort-24" aria-labelledby="kort-24-fraga"><div class="board-head"><span>Kort 24</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-24-fraga">Vad är högkonjunktur?</h3><div class="lead"><p><strong>Högkonjunktur</strong> betyder <strong>”goda tider”</strong>, alltså när ekonomin <strong>går bra</strong>.</p></div><div class="figure" style="max-width:1017px"><div class="figure-inner"><img class="figure-img" src="kort24.webp" width="1220" height="672" loading="lazy" alt="Infografik till kort 24: Vad är högkonjunktur?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Det finns en <strong>stor efterfrågan</strong> på varor och tjänster.</p><p>Därför ökar <strong>produktionen</strong>, och <strong>arbetslösheten är låg</strong>.</p><p>Företagen tjänar pengar, och staten får in <strong>mer skatt</strong>.</p><p>Men priserna kan <strong>stiga</strong>, och då kan det bli <strong>inflation</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Ekonomin går i <strong>vågor</strong>. En hel våg kallas <strong>konjunkturcykel</strong> och varar oftast <strong>5–8 år</strong>.</p></div></div></article><article class="board" id="kort-25" aria-labelledby="kort-25-fraga"><div class="board-head"><span>Kort 25</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-25-fraga">Vad är lågkonjunktur?</h3><div class="lead"><p><strong>Lågkonjunktur</strong> betyder <strong>”sämre tider”</strong>, alltså när ekonomin <strong>går sämre</strong>.</p></div><div class="figure" style="max-width:1017px"><div class="figure-inner"><img class="figure-img" src="kort25.webp" width="1330" height="732" loading="lazy" alt="Infografik till kort 25: Vad är lågkonjunktur?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p><strong>Efterfrågan</strong> på varor och tjänster <strong>minskar</strong>, så företagen <strong>säljer mindre</strong>.</p><p>Fler blir <strong>arbetslösa</strong>, och företag kan gå i <strong>konkurs</strong>.</p><p>Staten får in <strong>mindre skatt</strong> men får <strong>större kostnader</strong> för stöd till arbetslösa.</p><p>Då kan <strong>kommuner och regioner</strong> behöva <strong>spara</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>En mycket <strong>lång och djup</strong> lågkonjunktur kallas <strong>depression</strong>.</p></div></div></article><article class="board" id="kort-26" aria-labelledby="kort-26-fraga"><div class="board-head"><span>Kort 26</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-26-fraga">Vad är inflation?</h3><div class="lead"><p><strong>Inflation</strong> betyder att <strong>priserna stiger</strong> och att <strong>pengarna blir mindre värda</strong>.</p></div><div class="figure" style="max-width:1011px"><div class="figure-inner"><img class="figure-img" src="kort26.webp" width="1376" height="762" loading="lazy" alt="Infografik till kort 26: Vad är inflation?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Du får <strong>mindre</strong> för <strong>samma summa pengar</strong>.</p><p>Politikerna är överens om att inflationen ska ligga runt <strong>2 %</strong> per år.</p><p><strong>Riksbanken</strong> styr inflationen med <strong>reporäntan</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>För <strong>100 kr</strong> fick man förr en <strong>full matkasse</strong>. Nu räcker samma hundralapp till <strong>mindre</strong>.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>Motsatsen, när priser och löner sjunker, kallas <strong>deflation</strong>.</p></div></div></article><article class="board" id="kort-27" aria-labelledby="kort-27-fraga"><div class="board-head"><span>Kort 27</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-27-fraga">Vad är marknadsekonomi?</h3><div class="lead"><p><strong>Marknadsekonomi</strong> är ett system där <strong>priserna styrs av utbud och efterfrågan</strong>.</p></div><div class="figure" style="max-width:1116px"><div class="figure-inner"><img class="figure-img" src="kort27.webp" width="1291" height="648" loading="lazy" alt="Infografik till kort 27: Vad är marknadsekonomi?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p><strong>Företagen ägs privat</strong>, och det finns <strong>konkurrens</strong>.</p><p>I en ren marknadsekonomi lägger sig <strong>staten inte i</strong> ekonomin, så <strong>staten är liten</strong>.</p><p>För att det ska fungera behövs <strong>många köpare och säljare</strong>, och det ska inte finnas <strong>monopol</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p><strong>Liberaler och konservativa</strong> är ofta mest positiva till marknadsekonomi.</p></div></div></article><article class="board" id="kort-28" aria-labelledby="kort-28-fraga"><div class="board-head"><span>Kort 28</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-28-fraga">Vad är utbud?</h3><div class="lead"><p><strong>Utbud</strong> är <strong>hur mycket</strong> det finns av en vara eller tjänst som <strong>säljs på marknaden</strong>.</p></div><div class="figure" style="max-width:1041px"><div class="figure-inner"><img class="figure-img" src="kort28.webp" width="1264" height="680" loading="lazy" alt="Infografik till kort 28: Vad är utbud?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>När <strong>utbudet är stort</strong> finns det mycket att välja på, och <strong>priset sjunker</strong>.</p><p>När <strong>utbudet är litet</strong> finns det lite kvar, och <strong>priset stiger</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>När priset stiger vill företagen <strong>sälja mer</strong>, och då <strong>ökar utbudet</strong>.</p></div></div></article><article class="board" id="kort-29" aria-labelledby="kort-29-fraga"><div class="board-head"><span>Kort 29</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-29-fraga">Vad är efterfrågan?</h3><div class="lead"><p><strong>Efterfrågan</strong> är <strong>hur mycket</strong> människor <strong>vill köpa</strong> av en vara eller tjänst.</p></div><div class="figure" style="max-width:1007px"><div class="figure-inner"><img class="figure-img" src="kort29.webp" width="1356" height="754" loading="lazy" alt="Infografik till kort 29: Vad är efterfrågan?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>När <strong>efterfrågan är hög</strong> vill många köpa, och <strong>priset stiger</strong>.</p><p>När <strong>efterfrågan är låg</strong> vill få köpa, och <strong>priset sjunker</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>Våren <strong>2020</strong> ville alla köpa <strong>handsprit</strong>. Efterfrågan blev hög, och <strong>priserna steg</strong> kraftigt.</p></div></div></article><article class="board" id="kort-30" aria-labelledby="kort-30-fraga"><div class="board-head"><span>Kort 30</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-30-fraga">Vad är planekonomi?</h3><div class="lead"><p><strong>Planekonomi</strong> betyder att <strong>staten bestämmer</strong> vad som ska produceras, <strong>hur mycket</strong> och till <strong>vilket pris</strong>.</p></div><div class="figure" style="max-width:959px"><div class="figure-inner"><img class="figure-img" src="kort30.webp" width="1240" height="724" loading="lazy" alt="Infografik till kort 30: Vad är planekonomi?"></div></div><div class="boxes"><div class="box" style="--c:var(--sektor);--t:var(--sektor-tint)"><p class="box-title">Så fungerar det</p><p>Mycket <strong>ägs gemensamt</strong>, ofta av staten.</p><p>Staten har <strong>stor makt</strong>, och människor har liten frihet att <strong>starta företag</strong>.</p></div><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p class="box-title">Risker</p><p>Det är svårt att veta vad som behövs, så det kan bli <strong>brist</strong> på vissa varor och <strong>överskott</strong> på andra.</p><p>Utan <strong>konkurrens</strong> riskerar varorna att få <strong>sämre kvalitet</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p><strong>Socialister och kommunister</strong> vill ofta att staten ska styra mer över ekonomin.</p></div></div></article><article class="board" id="kort-31" aria-labelledby="kort-31-fraga"><div class="board-head"><span>Kort 31</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-31-fraga">Vad är blandekonomi?</h3><div class="lead"><p><strong>Blandekonomi</strong> är en <strong>blandning</strong> av marknadsekonomi och planekonomi.</p></div><div class="figure" style="max-width:975px"><div class="figure-inner"><img class="figure-img" src="kort31.webp" width="1325" height="761" loading="lazy" alt="Infografik till kort 31: Vad är blandekonomi?"></div></div><div class="boxes"><div class="box" style="--c:var(--sektor);--t:var(--sektor-tint)"><p class="box-title">Staten styr</p><p><strong>Staten</strong> styr vissa delar, till exempel <strong>skola och vård</strong>.</p></div><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p class="box-title">Marknaden styr</p><p><strong>Företag och konsumenter</strong> bestämmer över andra delar, till exempel <strong>butiker och varor</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p><strong>Sverige</strong> har blandekonomi.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p><strong>Inget land</strong> har helt ren marknadsekonomi eller planekonomi. De flesta har <strong>blandekonomi</strong>.</p></div></div></article><article class="board" id="kort-32" aria-labelledby="kort-32-fraga"><div class="board-head"><span>Kort 32</span><span>I boken: Begreppslistan</span></div><h3 class="question" id="kort-32-fraga">Vad är monopol?</h3><div class="lead"><p><strong>Monopol</strong> betyder att <strong>ett enda företag</strong>, eller staten, är <strong>ensam</strong> om att sälja en viss vara eller tjänst.</p></div><div class="figure" style="max-width:1084px"><div class="figure-inner"><img class="figure-img" src="kort32.webp" width="1303" height="673" loading="lazy" alt="Infografik till kort 32: Vad är monopol?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Det finns <strong>ingen konkurrens</strong>.</p><p>Då styrs priset inte av <strong>utbud och efterfrågan</strong> på vanligt sätt.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p><strong>Systembolaget</strong> har monopol på att sälja alkohol i Sverige, eftersom staten vill <strong>begränsa</strong> alkoholen.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>I en fungerande <strong>marknadsekonomi</strong> ska det <strong>inte</strong> finnas monopol.</p></div></div></article></section><section id="del-5" aria-labelledby="del-5-titel"><h2 class="part-title" id="del-5-titel">Extra <span>mer ur kapitel 10</span></h2><p class="part-note">Står inte som egen rubrik på provlappen, men finns i kapitel 10. Läs det här om du har tid över.</p><article class="board" id="kort-33" aria-labelledby="kort-33-fraga"><div class="board-head"><span>Kort 33</span><span>I boken: s. 253</span></div><h3 class="question" id="kort-33-fraga">Vad är ekonomi, och vilka är ekonomins huvudfrågor?</h3><div class="lead"><p>Ordet <strong>ekonomi</strong> kommer från grekiskan och betyder ungefär <strong>hushållning</strong>.</p></div><div class="figure figure--steps" style="max-width:1200px"><img class="figure-img" src="kort33.webp" width="1359" height="613" loading="lazy" alt="Infografik till kort 33: Vad är ekonomi, och vilka är ekonomins huvudfrågor?"><div class="steps" style="grid-template-columns:3fr 393fr 58fr 903fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Ekonomi" style="background-image:url(kort33.webp);--ar:393/613;--bs:345.80% 100.00%;--bx:0.31% 0.00%;--crop-max:314px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Ekonomi handlar om att <strong>hushålla med resurser</strong>, alltså få dem att <strong>räcka</strong>.</p><p>Det gäller allt från ett <strong>barnbidrag</strong> till <strong>hela Sveriges ekonomi</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Fyra huvudfrågor" style="background-image:url(kort33.webp);--ar:903/613;--bs:150.50% 100.00%;--bx:99.56% 0.00%;--crop-max:722px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p><strong>Vad</strong> ska produceras?</p><p><strong>Hur</strong> ska produktionen gå till?</p><p><strong>Vem</strong> ska styra över produktionen?</p><p><strong>Hur</strong> ska resultaten <strong>fördelas</strong>?</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Samhällets ekonomi bygger på tre saker: <strong>arbete, produktion och handel</strong>.</p></div><div class="extra"><p class="extra-label">Tänk på</p><p>Frågorna har <strong>inga självklara svar</strong>. Olika <strong>ekonomiska system</strong> svarar på olika sätt.</p></div></div></article><article class="board" id="kort-34" aria-labelledby="kort-34-fraga"><div class="board-head"><span>Kort 34</span><span>I boken: s. 254</span></div><h3 class="question" id="kort-34-fraga">Hur skapas värde?</h3><div class="lead"><p><strong>Värde</strong> skapas genom <strong>arbete</strong>, när människor <strong>förädlar</strong> varor.</p></div><div class="figure" style="max-width:730px"><div class="figure-inner"><img class="figure-img" src="kort34.webp" width="928" height="712" loading="lazy" alt="Infografik till kort 34: Hur skapas värde?"></div></div><div class="boxes"><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p class="box-title">Kedjan</p><p>Skogsarbetaren <strong>hugger träd</strong>, sågverket gör <strong>virke</strong> och fabriken gör <strong>möbler</strong>.</p><p>Vid varje steg blir varan <strong>mer värd</strong>.</p><p>Möblerna säljs på <strong>varuhuset</strong>, och bonden som planterade skogen kan <strong>köpa</strong> dem.</p></div><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p class="box-title">Lön</p><p>Den som arbetar får <strong>lön</strong> som ersättning.</p><p>Lönen betalas för den <strong>tid</strong> man lägger ner och det <strong>värde</strong> man skapar.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Även <strong>sparade och lånade pengar</strong> hänger ihop med arbete. Lånar du måste du <strong>arbeta</strong> för att betala tillbaka.</p></div></div></article><article class="board" id="kort-35" aria-labelledby="kort-35-fraga"><div class="board-head"><span>Kort 35</span><span>I boken: s. 255</span></div><h3 class="question" id="kort-35-fraga">Varför behöver vi handla med varandra?</h3><div class="lead"><p>Vi behöver handla eftersom ingen kan <strong>göra allt själv</strong>.</p></div><div class="figure figure--steps" style="max-width:1200px"><img class="figure-img" src="kort35.webp" width="1319" height="598" loading="lazy" alt="Infografik till kort 35: Varför behöver vi handla med varandra?"><div class="steps" style="grid-template-columns:3fr 407fr 48fr 403fr 50fr 406fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Självhushållning" style="background-image:url(kort35.webp);--ar:407/598;--bs:324.08% 100.00%;--bx:0.33% 0.00%;--crop-max:326px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Förr var <strong>självhushållning</strong> vanligt.</p><p>Då <strong>producerade</strong> människor nästan allt de behövde <strong>själva</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Specialisering" style="background-image:url(kort35.webp);--ar:403/598;--bs:327.30% 100.00%;--bx:50.00% 0.00%;--crop-max:322px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Under den <strong>industriella revolutionen</strong> ökade <strong>specialiseringen</strong>.</p><p>De som var bäst på att odla <strong>vete</strong> gjorde det, och de som var bäst på att tillverka <strong>cyklar</strong> gjorde det.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Handel" style="background-image:url(kort35.webp);--ar:406/598;--bs:324.88% 100.00%;--bx:99.78% 0.00%;--crop-max:325px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>För att få tillgång till olika varor måste vi <strong>handla</strong> med varandra.</p><p>Vi handlar både <strong>inom landet</strong> och med <strong>andra länder</strong>.</p><p>Genom handel kan <strong>råvaror</strong> flyttas dit de <strong>förädlas</strong>.</p></div></div></div></div></article><article class="board" id="kort-36" aria-labelledby="kort-36-fraga"><div class="board-head"><span>Kort 36</span><span>I boken: s. 266–268</span></div><h3 class="question" id="kort-36-fraga">Vad betyder jämviktspris?</h3><div class="lead"><p><strong>Jämviktspris</strong> är det pris som uppstår när <strong>utbud och efterfrågan är i balans</strong>.</p></div><div class="figure figure-scroll" style="max-width:1080px"><div class="figure-inner"><img class="figure-img" src="kort36.webp" width="1362" height="706" loading="lazy" alt="Infografik till kort 36: Vad betyder jämviktspris?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--lila);--t:var(--lila-tint)"><p>Är priset <strong>för högt</strong> vill få köpa, och det blir <strong>utbudsöverskott</strong>, alltså fler varor än någon vill ha.</p><p>Är priset <strong>för lågt</strong> vill många köpa, och det blir <strong>efterfrågeöverskott</strong>, alltså <strong>brist</strong> på varor.</p><p>Marknaden strävar mot <strong>”det rätta priset”</strong>, där köpare och säljare möts.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>Våren <strong>2020</strong> ökade efterfrågan på <strong>handsprit</strong> kraftigt. Producenterna hann inte göra mer, så <strong>priset steg</strong>.</p></div><div class="extra"><p class="extra-label">Bra att veta</p><p>Varor som vi <strong>måste ha</strong>, som mat, är <strong>inte så känsliga</strong> för prisändringar. Restaurangbesök är <strong>mer känsliga</strong>.</p></div></div></article><article class="board" id="kort-37" aria-labelledby="kort-37-fraga"><div class="board-head"><span>Kort 37</span><span>I boken: s. 269</span></div><h3 class="question" id="kort-37-fraga">Vilka saker är de flesta politiska partier överens om?</h3><div class="lead"><p>De flesta partier har <strong>samma mål</strong> för ekonomin, men olika idéer om <strong>hur</strong> man når dem.</p></div><div class="figure figure--steps" style="max-width:1118px"><img class="figure-img" src="kort37.webp" width="1358" height="680" loading="lazy" alt="Infografik till kort 37: Vilka saker är de flesta politiska partier överens om?"><div class="steps" style="grid-template-columns:5fr 870fr 13fr 457fr 13fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Överens" style="background-image:url(kort37.webp);--ar:870/647;--bs:156.09% 105.10%;--bx:1.02% 0.00%;--crop-max:696px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Alla vill ha <strong>låg arbetslöshet</strong> och <strong>hög levnadsstandard</strong>.</p><p>Alla vill att <strong>inflationen</strong> ska vara <strong>låg</strong>.</p><p>De flesta tycker att de <strong>sociala klyftorna</strong> inte ska vara <strong>för stora</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Oense om klyftor" style="background-image:url(kort37.webp);--ar:457/647;--bs:297.16% 105.10%;--bx:98.56% 0.00%;--crop-max:366px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Politiker till <strong>höger</strong> kan tycka att vissa klyftor är bra, eftersom <strong>utbildning och hårt arbete</strong> ska löna sig.</p><p>Politiker till <strong>vänster</strong> tycker nästan alltid att klyftor är <strong>negativa</strong> och vill minska dem med <strong>fördelningspolitik</strong>.</p></div></div></div></div></article><article class="board" id="kort-38" aria-labelledby="kort-38-fraga"><div class="board-head"><span>Kort 38</span><span>I boken: s. 269</span></div><h3 class="question" id="kort-38-fraga">Vad är BNP och BNP per capita?</h3><div class="lead"><p><strong>BNP</strong> (bruttonationalprodukt) är <strong>värdet av alla varor och tjänster</strong> som produceras i ett land under <strong>ett år</strong>.</p></div><div class="figure figure--steps" style="max-width:1129px"><img class="figure-img" src="kort38.webp" width="1339" height="664" loading="lazy" alt="Infografik till kort 38: Vad är BNP och BNP per capita?"><div class="steps" style="grid-template-columns:2fr 403fr 58fr 414fr 51fr 408fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="BNP" style="background-image:url(kort38.webp);--ar:403/664;--bs:332.26% 100.00%;--bx:0.21% 0.00%;--crop-max:322px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>BNP visar hur <strong>stor</strong> ett lands ekonomi är.</p><p>Ett <strong>stort land</strong> har alltid större BNP än ett litet, så BNP säger <strong>inte</strong> hur rikt landet är.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="BNP per capita" style="background-image:url(kort38.webp);--ar:414/664;--bs:323.43% 100.00%;--bx:50.05% 0.00%;--crop-max:331px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p><strong>BNP per capita</strong> är BNP <strong>delat med antalet invånare</strong>.</p><p>Ett land med <strong>hög BNP per capita</strong> är <strong>rikare</strong> än ett land med låg.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="HDI" style="background-image:url(kort38.webp);--ar:408/664;--bs:328.19% 100.00%;--bx:99.68% 0.00%;--crop-max:326px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>BNP per capita säger inget om hur pengarna är <strong>fördelade</strong>.</p><p>Därför har FN tagit fram <strong>HDI</strong>, som mäter <strong>livslängd, utbildning och levnadsstandard</strong>.</p></div></div></div></div></article><article class="board" id="kort-39" aria-labelledby="kort-39-fraga"><div class="board-head"><span>Kort 39</span><span>I boken: s. 274</span></div><h3 class="question" id="kort-39-fraga">Vad är en depression?</h3><div class="lead"><p>En <strong>depression</strong> är en <strong>lång och djup lågkonjunktur</strong>.</p></div><div class="figure figure--steps" style="max-width:1055px"><img class="figure-img" src="kort39.webp" width="1340" height="711" loading="lazy" alt="Infografik till kort 39: Vad är en depression?"><div class="steps" style="grid-template-columns:3fr 427fr 44fr 392fr 47fr 424fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Depression" style="background-image:url(kort39.webp);--ar:427/711;--bs:313.82% 100.00%;--bx:0.33% 0.00%;--crop-max:342px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p><strong>Arbetslösheten ökar kraftigt</strong>, och många företag måste <strong>läggas ner</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Följder" style="background-image:url(kort39.webp);--ar:392/711;--bs:341.84% 100.00%;--bx:50.00% 0.00%;--crop-max:314px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Människor förlorar sina <strong>jobb</strong> och sina <strong>hem</strong>, och <strong>fattigdomen</strong> ökar.</p><p>Många företag går i <strong>konkurs</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Historia" style="background-image:url(kort39.webp);--ar:424/711;--bs:316.04% 100.00%;--bx:99.67% 0.00%;--crop-max:339px"></div><div class="box box--aligned" style="--c:var(--lila);--t:var(--lila-tint)"><p>Vid <strong>hyperinflationen</strong> i Tyskland på <strong>1920-talet</strong> blev sedlarna <strong>värdelösa</strong>.</p><p>Den <strong>stora depressionen</strong> på <strong>1930-talet</strong> påverkade hela världens ekonomi.</p><p>Kriser kan ge grogrund för <strong>politisk extremism</strong>. Den stora depressionen bidrog till att <strong>nazismen</strong> tog makten i Tyskland.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>En depression kan börja när en <strong>ekonomisk bubbla spricker</strong>, alltså när priserna har stigit snabbt på grund av <strong>orealistiska förväntningar</strong>.</p></div></div></article><article class="board" id="kort-40" aria-labelledby="kort-40-fraga"><div class="board-head"><span>Kort 40</span><span>I boken: s. 275</span></div><h3 class="question" id="kort-40-fraga">Vilka är målen för den ekonomiska politiken?</h3><div class="lead"><p>I Sverige brukar man säga att den ekonomiska politiken har <strong>fem mål</strong>.</p></div><div class="figure figure-scroll" style="max-width:1200px"><div class="figure-inner"><img class="figure-img" src="kort40.webp" width="1360" height="534" loading="lazy" alt="Infografik till kort 40: Vilka är målen för den ekonomiska politiken?"></div></div><div class="boxes boxes--single"><div class="box" style="--c:var(--sektor);--t:var(--sektor-tint)"><p><strong>Full sysselsättning</strong>: alla som kan och vill ska ha ett <strong>jobb</strong>.</p><p><strong>Stabilt penningvärde</strong>: <strong>låg och stabil inflation</strong>.</p><p><strong>Hög ekonomisk tillväxt</strong>: ekonomin ska <strong>växa</strong>.</p><p><strong>Fördelning av resurserna</strong>: klyftorna ska inte bli för stora.</p><p><strong>Balans i utrikeshandeln</strong>: vi ska <strong>exportera</strong> ungefär lika mycket som vi <strong>importerar</strong>.</p></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Målen ser olika ut i olika länder, beroende på vilken <strong>ideologi</strong> som styr.</p></div></div></article><article class="board" id="kort-41" aria-labelledby="kort-41-fraga"><div class="board-head"><span>Kort 41</span><span>I boken: s. 275–276</span></div><h3 class="question" id="kort-41-fraga">Vad är penningpolitik, och hur används reporäntan?</h3><div class="lead"><p><strong>Penningpolitik</strong> är de verktyg som <strong>Riksbanken</strong> använder för att hålla <strong>penningvärdet stabilt</strong>. Målet är att inflationen ska vara runt <strong>2 %</strong>.</p></div><div class="figure figure--steps" style="max-width:1100px"><img class="figure-img" src="kort41.webp" width="1334" height="679" loading="lazy" alt="Infografik till kort 41: Vad är penningpolitik, och hur används reporäntan?"><div class="steps" style="grid-template-columns:2fr 330fr 43fr 311fr 44fr 601fr 3fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Riksbanken" style="background-image:url(kort41.webp);--ar:330/679;--bs:404.24% 100.00%;--bx:0.20% 0.00%;--crop-max:264px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p>Riksbanken är Sveriges <strong>centralbank</strong> och grundades <strong>1668</strong>.</p><p>Den är <strong>självständig</strong> och fattar sina beslut utan att politikerna lägger sig i.</p><p>Den ger ut <strong>sedlar och mynt</strong>.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Reporäntan" style="background-image:url(kort41.webp);--ar:311/679;--bs:428.94% 100.00%;--bx:36.66% 0.00%;--crop-max:249px"></div><div class="box box--aligned" style="--c:var(--lila);--t:var(--lila-tint)"><p>Riksbankens viktigaste verktyg är <strong>reporäntan</strong>.</p><p>Den påverkar <strong>alla andra räntor</strong> i landet.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Effekt" style="background-image:url(kort41.webp);--ar:601/679;--bs:221.96% 100.00%;--bx:99.59% 0.00%;--crop-max:481px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p><strong>Höjer</strong> Riksbanken räntan blir det <strong>dyrare att låna</strong>. Människor <strong>konsumerar mindre</strong>, och <strong>inflationen sjunker</strong>.</p><p><strong>Sänker</strong> Riksbanken räntan blir det <strong>billigare att låna</strong>, och människor <strong>konsumerar mer</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Exempel</p><p>Om räntan höjs får en familj med <strong>bolån</strong> högre kostnader och har <strong>mindre pengar</strong> över att handla för.</p></div></div></article><article class="board" id="kort-42" aria-labelledby="kort-42-fraga"><div class="board-head"><span>Kort 42</span><span>I boken: s. 276–277</span></div><h3 class="question" id="kort-42-fraga">Vad är finanspolitik, fördelningspolitik och tillväxtpolitik?</h3><div class="lead"><p><strong>Konjunkturpolitik</strong> ska <strong>jämna ut svängningarna</strong> i ekonomin och hålla nere både <strong>inflation</strong> och <strong>arbetslöshet</strong>.</p></div><div class="figure figure--steps" style="max-width:1078px"><img class="figure-img" src="kort42.webp" width="1307" height="679" loading="lazy" alt="Infografik till kort 42: Vad är finanspolitik, fördelningspolitik och tillväxtpolitik?"><div class="steps" style="grid-template-columns:2fr 428fr 12fr 423fr 12fr 428fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Finanspolitik" style="background-image:url(kort42.webp);--ar:428/537;--bs:305.37% 126.44%;--bx:0.23% 100.00%;--crop-max:342px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p><strong>Regeringen</strong> styr statens inkomster och utgifter med <strong>skatter, bidrag och investeringar</strong>.</p><p>Vid <strong>lågkonjunktur</strong> kan staten <strong>sänka skatter och höja bidrag</strong>. Vid <strong>högkonjunktur</strong> gör den tvärtom.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Fördelningspolitik" style="background-image:url(kort42.webp);--ar:423/537;--bs:308.98% 126.44%;--bx:50.00% 100.00%;--crop-max:338px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Fördelningspolitik <strong>flyttar resurser</strong> från dem som har <strong>mycket</strong> till dem som har <strong>lite</strong>.</p><p>Det görs till exempel med <strong>skatter</strong> och <strong>bidrag</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Tillväxtpolitik" style="background-image:url(kort42.webp);--ar:428/537;--bs:305.37% 126.44%;--bx:99.77% 100.00%;--crop-max:342px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Tillväxtpolitik ska skapa <strong>långsiktigt positiv</strong> ekonomisk utveckling.</p><p>Partier till <strong>vänster</strong> satsar gärna på <strong>offentlig verksamhet</strong>, och partier till <strong>höger</strong> vill ofta stötta <strong>företag</strong> och <strong>sänka skatter</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Fördelningspolitik kallas ibland <strong>välfärdspolitik</strong>, eftersom <strong>skola och vård för alla</strong> är ett sätt att fördela resurser.</p></div></div></article><article class="board" id="kort-43" aria-labelledby="kort-43-fraga"><div class="board-head"><span>Kort 43</span><span>I boken: s. 278</span></div><h3 class="question" id="kort-43-fraga">Vilka ekonomiska idéer har funnits genom historien?</h3><div class="lead"><p>Genom historien har det funnits olika idéer om hur ekonomin ska <strong>organiseras</strong>.</p></div><div class="figure figure-scroll" style="max-width:1200px"><div class="figure-inner"><img class="figure-img" src="kort43.webp" width="1318" height="495" loading="lazy" alt="Infografik till kort 43: Vilka ekonomiska idéer har funnits genom historien?"></div></div><div class="boxes"><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p class="box-title">Merkantilism, 1500–1600-tal</p><p>Länderna ville <strong>importera råvaror</strong>, <strong>förädla</strong> dem och <strong>exportera</strong>.</p><p>Höga <strong>tullar</strong> skyddade den egna produktionen.</p></div><div class="box" style="--c:var(--sektor);--t:var(--sektor-tint)"><p class="box-title">Ekonomisk liberalism, 1700-tal</p><p><strong>Adam Smith</strong> ville ta bort alla hinder för handel och ha <strong>frihandel</strong>.</p><p>En <strong>”osynlig hand”</strong>, alltså marknaden, skulle lösa resten.</p></div><div class="box" style="--c:var(--valfard);--t:var(--valfard-tint)"><p class="box-title">Marxism, 1800-tal</p><p><strong>Karl Marx</strong> menade att samhället präglas av <strong>kamp mellan klasser</strong>.</p><p><strong>Arbetarna</strong> skulle ta kontroll över <strong>produktionen</strong>.</p></div><div class="box" style="--c:var(--lila);--t:var(--lila-tint)"><p class="box-title">Keynesianism, 1930-tal</p><p><strong>John Maynard Keynes</strong> ville att <strong>staten</strong> skulle <strong>spara i högkonjunktur</strong> och <strong>satsa i lågkonjunktur</strong>.</p><p>Målet var att minska <strong>arbetslösheten</strong>.</p></div><div class="box" style="--c:var(--skatt);--t:var(--skatt-tint)"><p class="box-title">Monetarism, 1970-tal</p><p><strong>Milton Friedman</strong> såg <strong>inflationen</strong> som det största problemet.</p><p>Den skulle bekämpas genom att <strong>begränsa mängden pengar</strong>, och staten skulle reglera <strong>så lite som möjligt</strong>.</p></div></div></article><article class="board" id="kort-44" aria-labelledby="kort-44-fraga"><div class="board-head"><span>Kort 44</span><span>I boken: s. 279</span></div><h3 class="question" id="kort-44-fraga">Hur fungerar statens budget?</h3><div class="lead"><p>Precis som en familj gör staten en <strong>budget</strong>, fast för ett helt år.</p></div><div class="figure figure--steps" style="max-width:1098px"><img class="figure-img" src="kort44.webp" width="1343" height="685" loading="lazy" alt="Infografik till kort 44: Hur fungerar statens budget?"><div class="steps" style="grid-template-columns:2fr 470fr 21fr 384fr 21fr 443fr 2fr"><div class="step" style="grid-column:2"><div class="crop" role="img" aria-label="Budgetproposition" style="background-image:url(kort44.webp);--ar:470/495;--bs:285.74% 138.38%;--bx:0.23% 0.00%;--crop-max:376px"></div><div class="box box--aligned" style="--c:var(--sektor);--t:var(--sektor-tint)"><p><strong>Regeringen</strong> lämnar varje år en <strong>budgetproposition</strong> till <strong>riksdagen</strong>.</p><p>Den är regeringens <strong>viktigaste dokument</strong>, eftersom den styr alla andra politiska förslag.</p><p>Riksdagens partier skriver egna förslag, <strong>budgetmotioner</strong>, och debatterar.</p></div></div><div class="step" style="grid-column:4"><div class="crop" role="img" aria-label="Största inkomst" style="background-image:url(kort44.webp);--ar:384/495;--bs:349.74% 138.38%;--bx:51.41% 0.00%;--crop-max:307px"></div><div class="box box--aligned" style="--c:var(--valfard);--t:var(--valfard-tint)"><p>Statens största inkomst är <strong>skatter</strong>.</p></div></div><div class="step" style="grid-column:6"><div class="crop" role="img" aria-label="Största utgift" style="background-image:url(kort44.webp);--ar:443/495;--bs:303.16% 138.38%;--bx:99.78% 0.00%;--crop-max:354px"></div><div class="box box--aligned" style="--c:var(--skatt);--t:var(--skatt-tint)"><p>Statens största utgift är <strong>statsbidrag</strong> till <strong>kommuner och regioner</strong>.</p><p><strong>Rika</strong> kommuner får <strong>mindre</strong> och <strong>fattiga</strong> kommuner får <strong>mer</strong>.</p></div></div></div></div><div class="extras"><div class="extra"><p class="extra-label">Bra att veta</p><p>Om utgifterna är större än inkomsterna blir det <strong>budgetunderskott</strong>. Då måste staten <strong>låna</strong> pengar.</p></div></div></article></section>
+    <section id="fordjupning" class="deep-section" aria-labelledby="fordjupning-titel"><h2 class="part-title" id="fordjupning-titel">Fördjupning <span>Frågor och svar</span></h2><p class="part-note">Här tränar du på att förklara hur saker hänger ihop. Svaren är skrivna steg för steg, så som du kan skriva dem på provet.</p><div class="howto"><p class="howto-head">Så svarar du på en sambandsfråga</p><ol><li><p class="howto-t">Börja med det som händer först</p><p>Vad är orsaken? Skriv det i första meningen.</p></li><li><p class="howto-t">Följ kedjan steg för steg</p><p>Varje mening leder vidare till nästa. Hoppa inte över något steg.</p></li><li><p class="howto-t">Använd sambandsord</p><p><span class="link">eftersom</span>, <span class="link">därför</span>, <span class="link">det leder till</span>, <span class="link">då</span>, <span class="link">om … så</span>, <span class="link">samtidigt</span>.</p></li><li><p class="howto-t">Säg vem som påverkas</p><p>Hushållen, företagen, kommunen eller staten?</p></li><li><p class="howto-t">Avsluta med en slutsats</p><p>Vad visar exemplet om hur samhället hänger ihop?</p></li></ol></div><h3 class="group-title">Välfärden</h3><div class="deep-grid"><article class="board deep" id="fraga-1"><div class="board-head"><span>Fråga 1</span></div><h4 class="deep-q">Varför betalar den som tjänar mer också mer skatt?</h4><ol class="chain"><li>I Sverige betalas välfärden med <strong>skatt</strong>, och den som tjänar mer betalar <strong>mer</strong>.</li><li><span class="link">Eftersom</span> de med hög lön betalar mer, får samhället in mer pengar till sådant som <strong>alla</strong> använder, till exempel skola, vård och omsorg.</li><li><span class="link">Det leder till</span> att även de som har <strong>låg inkomst</strong> får tillgång till bra välfärd.</li><li><span class="link">På så sätt</span> blir <strong>skillnaderna</strong> mellan människor mindre, och det är ett av välfärdens viktigaste <strong>mål</strong>.</li><li><span class="link">Därför</span> betalar den som tjänar mest också <strong>statlig skatt</strong>, utöver skatten till kommun och region.</li></ol></article><article class="board deep" id="fraga-2"><div class="board-head"><span>Fråga 2</span></div><h4 class="deep-q">Varför får vi mest av välfärden i början och slutet av livet?</h4><ol class="chain"><li>Som <strong>barn och unga</strong> får vi mycket av välfärden: <strong>förskola, skola, barnbidrag</strong> och <strong>studiebidrag</strong>. Samtidigt betalar vi nästan ingen skatt.</li><li>När vi blir <strong>vuxna</strong> börjar vi <strong>arbeta</strong>, och <span class="link">därför</span> betalar vi mest skatt mitt i livet.</li><li>När vi blir <strong>äldre</strong> slutar vi arbeta och får <strong>pension</strong>. Vi behöver <span class="link">dessutom</span> ofta mer <strong>vård</strong> och <strong>äldreomsorg</strong>.</li><li><span class="link">Det betyder att</span> de som arbetar i dag betalar för både <strong>barnen</strong> och <strong>de äldre</strong>.</li><li>Välfärden bygger alltså på att vi <strong>hjälps åt</strong> mellan generationerna.</li></ol></article><article class="board deep" id="fraga-3"><div class="board-head"><span>Fråga 3</span></div><h4 class="deep-q">Varför får alla barnbidrag, men bara de som är med i en a-kassa får a-kassa?</h4><ol class="chain"><li><strong>Barnbidraget</strong> är ett <strong>allmänt bidrag</strong>. Alla familjer får det, oavsett hur mycket de tjänar.</li><li>Syftet är att alla barn ska få en <strong>trygg start</strong>, och <span class="link">därför</span> behöver familjen inte betala något för att få det.</li><li><strong>A-kassan</strong> fungerar i stället som en <strong>försäkring</strong>.</li><li>Man måste ha varit <strong>medlem</strong> i en arbetslöshetskassa och betalat <strong>avgift</strong> för att få ersättning. <span class="link">Dessutom</span> får man bara pengar under en <strong>begränsad tid</strong>.</li><li>Skillnaden är alltså att barnbidraget betalas med <strong>skatt</strong> till alla, medan a-kassan bygger på att man <strong>själv har betalat in</strong>.</li></ol></article><article class="board deep" id="fraga-4"><div class="board-head"><span>Fråga 4</span></div><h4 class="deep-q">Varför kan det vara svårt att få en privat vårdcentral i glesbygd?</h4><ol class="chain"><li>I <strong>glesbygd</strong> bor det <strong>få människor</strong> på en stor yta.</li><li><span class="link">Eftersom</span> det finns få patienter, får en privat vårdcentral in <strong>mindre pengar</strong>.</li><li>Privata företag vill gå med <strong>vinst</strong>, och <span class="link">därför</span> startar de hellre vårdcentraler där det bor <strong>många</strong>.</li><li><span class="link">Det leder till</span> att det kan saknas privata alternativ på landsbygden.</li><li>Men samhället måste ge vård till <strong>alla</strong>. <span class="link">Därför</span> måste <strong>regionen</strong> ändå se till att det finns vård även i glesbygden.</li><li>Det här är ett av de argument som <strong>motståndarna</strong> till privatisering använder.</li></ol></article></div><h3 class="group-title">Kommun, region och stat</h3><div class="deep-grid"><article class="board deep" id="fraga-5"><div class="board-head"><span>Fråga 5</span></div><h4 class="deep-q">Varför sköter regionen sjukvården och inte kommunen?</h4><ol class="chain"><li>Sjukvård är <strong>mycket dyr</strong>, till exempel sjukhus, specialistläkare och avancerad utrustning.</li><li>En liten kommun skulle <strong>inte ha råd</strong> att ha ett eget sjukhus.</li><li><span class="link">Därför</span> samarbetar flera kommuner inom ett <strong>större område</strong>, en <strong>region</strong>.</li><li><span class="link">På så sätt</span> kan kostnaderna delas av <strong>fler invånare</strong>.</li><li>Samma sak gäller <strong>kollektivtrafiken</strong>, som också går över <strong>kommungränserna</strong>.</li></ol></article><article class="board deep" id="fraga-6"><div class="board-head"><span>Fråga 6</span></div><h4 class="deep-q">Vad händer i en kommun när många flyttar därifrån?</h4><ol class="chain"><li>När människor flyttar blir det <strong>färre som arbetar</strong> och betalar <strong>kommunalskatt</strong>.</li><li><span class="link">Det leder till</span> att kommunen får <strong>mindre pengar</strong>.</li><li>Kostnaderna minskar <span class="link">däremot</span> inte lika snabbt, <span class="link">eftersom</span> skolor, äldreomsorg och vägar ändå måste finnas.</li><li><span class="link">Om</span> det är de <strong>unga</strong> som flyttar, blir andelen <strong>äldre</strong> större, och <span class="link">då</span> kan behovet av <strong>äldreomsorg</strong> öka.</li><li>Kommunen kan <span class="link">därför</span> behöva <strong>spara</strong> eller <strong>höja skatten</strong>.</li><li><strong>Staten</strong> hjälper till med <strong>statsbidrag</strong>, <span class="link">eftersom</span> fattiga kommuner får <strong>mer</strong> än rika.</li></ol></article><article class="board deep" id="fraga-7"><div class="board-head"><span>Fråga 7</span></div><h4 class="deep-q">Om du går i friskola, vem betalar då?</h4><ol class="chain"><li>Det är fortfarande <strong>skattepengar</strong> som betalar skolan.</li><li>Invånarna betalar <strong>kommunalskatt</strong> till kommunen.</li><li>Kommunen betalar sedan en <strong>skolpeng</strong> för varje elev.</li><li><span class="link">Om</span> eleven väljer en <strong>friskola</strong>, går skolpengen till friskolan <strong>i stället för</strong> till den kommunala skolan.</li><li><span class="link">Därför</span> är friskolan <strong>gratis</strong> för eleven, trots att den drivs av ett <strong>privat företag</strong>.</li></ol></article><article class="board deep" id="fraga-8"><div class="board-head"><span>Fråga 8</span></div><h4 class="deep-q">Varför bestämmer staten skollagen fast kommunen äger skolorna?</h4><ol class="chain"><li>Kommunen <strong>äger skolorna</strong> och <strong>anställer</strong> lärarna.</li><li>Men alla elever i Sverige ska få en <strong>likvärdig</strong> utbildning, oavsett var de bor.</li><li><span class="link">Därför</span> bestämmer <strong>staten</strong> skollagen och <strong>läroplanerna</strong> som alla skolor måste följa.</li><li><span class="link">På så sätt</span> lär sig en elev i Kiruna samma sak som en elev i Malmö.</li><li>Det gäller <span class="link">även</span> <strong>friskolor</strong>, som också måste följa skollagen.</li></ol></article></div><h3 class="group-title">Ekonomiska kretsloppet</h3><div class="deep-grid"><article class="board deep" id="fraga-9"><div class="board-head"><span>Fråga 9</span></div><h4 class="deep-q">Vad händer om hushållen slutar handla?</h4><ol class="chain"><li><span class="link">Om</span> hushållen slutar handla, <strong>minskar efterfrågan</strong> på varor och tjänster.</li><li><span class="link">Det leder till</span> att företagen <strong>säljer mindre</strong> och tjänar mindre pengar.</li><li><span class="link">Därför</span> måste företagen <strong>säga upp personal</strong>.</li><li>Fler blir <strong>arbetslösa</strong>, och <span class="link">då</span> har ännu fler hushåll <strong>mindre pengar</strong> att handla för.</li><li><span class="link">Samtidigt</span> får stat, kommuner och regioner in <strong>mindre skatt</strong>, men får <strong>större kostnader</strong> för stöd till arbetslösa.</li><li><span class="link">Till slut</span> kan kommunerna behöva <strong>spara</strong>, till exempel på skola och äldreomsorg.</li><li>Det här visar att alla delar i kretsloppet är <strong>beroende av varandra</strong>.</li></ol></article><article class="board deep" id="fraga-10"><div class="board-head"><span>Fråga 10</span></div><h4 class="deep-q">Vad händer på en ort när ett stort företag går i konkurs?</h4><ol class="chain"><li>Ett företag går i <strong>konkurs</strong> när det inte kan betala sina <strong>skulder</strong>.</li><li><span class="link">Då</span> förlorar alla som jobbar där sina <strong>jobb</strong>.</li><li><span class="link">Det leder till</span> att fler behöver <strong>a-kassa</strong> eller <strong>försörjningsstöd</strong>.</li><li>De arbetslösa har mindre pengar, och <span class="link">därför</span> handlar de mindre i ortens <strong>butiker</strong>. <span class="link">Då</span> kan även andra företag få det svårt.</li><li>Kommunen får in <strong>mindre skatt</strong> <span class="link">samtidigt som</span> <strong>kostnaderna ökar</strong>.</li><li><span class="link">Om</span> människor flyttar för att hitta nya jobb, minskar skatteintäkterna <strong>ännu mer</strong>.</li></ol></article><article class="board deep" id="fraga-11"><div class="board-head"><span>Fråga 11</span></div><h4 class="deep-q">Varför behövs bankerna?</h4><ol class="chain"><li>Hushåll och företag <strong>sparar</strong> pengar på banken och får <strong>ränta</strong>.</li><li>Banken använder de sparade pengarna till att <strong>låna ut</strong>.</li><li><span class="link">Tack vare</span> lånen kan en familj köpa ett <strong>hus</strong>, och ett företag kan köpa nya <strong>maskiner</strong>.</li><li><span class="link">När</span> företagen <strong>investerar</strong> kan de växa och <strong>anställa</strong> fler.</li><li><span class="link">Därför</span> kallas bankerna ett <strong>smörjmedel</strong> i kretsloppet. Utan dem skulle de andra delarna ha <strong>svårt att fungera</strong> tillsammans.</li></ol></article><article class="board deep" id="fraga-12"><div class="board-head"><span>Fråga 12</span></div><h4 class="deep-q">Vad händer om staten sänker skatten?</h4><ol class="chain"><li><span class="link">Om</span> skatten sänks, får hushållen <strong>mer pengar kvar</strong> av lönen.</li><li><span class="link">Det leder till</span> att de kan <strong>konsumera mer</strong>.</li><li><span class="link">När</span> efterfrågan ökar, säljer företagen mer och kan <strong>anställa fler</strong>.</li><li><span class="link">Därför</span> kan sänkta skatter användas för att få fart på ekonomin i en <strong>lågkonjunktur</strong>. Det kallas <strong>finanspolitik</strong>.</li><li><span class="link">Men</span> staten, regionerna och kommunerna får in <strong>mindre pengar</strong> till välfärden.</li><li><span class="link">Å ena sidan</span> kan ekonomin växa, <span class="link">å andra sidan</span> kan det bli mindre pengar till skola, vård och omsorg.</li></ol></article></div><h3 class="group-title">Konjunktur, inflation och marknad</h3><div class="deep-grid"><article class="board deep" id="fraga-13"><div class="board-head"><span>Fråga 13</span></div><h4 class="deep-q">Varför kan en högkonjunktur leda till inflation?</h4><ol class="chain"><li>I en högkonjunktur är <strong>efterfrågan stor</strong>, och de flesta har jobb.</li><li>Företagen behöver mer <strong>arbetskraft</strong>, och <span class="link">därför</span> kan de anställda kräva <strong>högre löner</strong>.</li><li>Högre löner gör att människor kan <strong>konsumera mer</strong>, <span class="link">vilket</span> ökar efterfrågan ännu mer.</li><li><span class="link">Samtidigt</span> ökar företagens <strong>kostnader</strong>, och <span class="link">därför</span> höjer de <strong>priserna</strong>.</li><li><span class="link">Det leder till</span> att priserna stiger, alltså <strong>inflation</strong>.</li><li>När löner och priser driver upp varandra kallas det en <strong>pris- och lönespiral</strong>.</li></ol></article><article class="board deep" id="fraga-14"><div class="board-head"><span>Fråga 14</span></div><h4 class="deep-q">Varför får kommunerna det svårare i en lågkonjunktur?</h4><ol class="chain"><li>I en lågkonjunktur <strong>minskar efterfrågan</strong>, och företagen säljer mindre.</li><li><span class="link">Därför</span> säger företagen upp personal, och <strong>fler blir arbetslösa</strong>.</li><li>De arbetslösa betalar <strong>mindre skatt</strong>, och <span class="link">det leder till</span> att kommunen får <strong>mindre pengar</strong>.</li><li><span class="link">Samtidigt</span> behöver fler människor <strong>stöd</strong>, till exempel <strong>försörjningsstöd</strong> från kommunen.</li><li>Kommunen får alltså <strong>mindre inkomster</strong> och <strong>större kostnader</strong> på samma gång.</li><li><span class="link">Därför</span> kan kommunen behöva <strong>spara</strong>, till exempel på skola eller äldreomsorg.</li></ol></article><article class="board deep" id="fraga-15"><div class="board-head"><span>Fråga 15</span></div><h4 class="deep-q">Varför steg priset på handsprit 2020?</h4><ol class="chain"><li>Våren 2020 kom <strong>coronaviruset</strong> till Sverige, och handsprit var ett bra skydd mot smitta.</li><li><span class="link">Därför</span> ville väldigt många köpa handsprit, och <strong>efterfrågan ökade kraftigt</strong>.</li><li>Producenterna hade inte hunnit tillverka mer, så <strong>utbudet</strong> var <strong>litet</strong>.</li><li><span class="link">När</span> efterfrågan är större än utbudet uppstår <strong>efterfrågeöverskott</strong>, alltså <strong>brist</strong>.</li><li><span class="link">Det leder till</span> att <strong>priset stiger</strong>.</li><li>Det här visar hur <strong>utbud och efterfrågan</strong> styr priset i en <strong>marknadsekonomi</strong>.</li></ol></article><article class="board deep" id="fraga-16"><div class="board-head"><span>Fråga 16</span></div><h4 class="deep-q">Varför är hög inflation dåligt för den som sparar?</h4><ol class="chain"><li>Inflation betyder att <strong>priserna stiger</strong>.</li><li><span class="link">Om</span> du har pengar på banken och priserna stiger, kan du köpa <strong>mindre</strong> för samma pengar.</li><li><span class="link">Därför</span> blir dina sparade pengar <strong>mindre värda</strong>.</li><li><span class="link">Om</span> inflationen ökar för snabbt, <strong>urholkas</strong> pengarnas värde ännu mer.</li><li><span class="link">Dessutom</span> blir svenska varor <strong>dyrare</strong> att sälja till andra länder, och <span class="link">det kan leda till</span> att företag drar ner och att <strong>arbetslösheten</strong> ökar.</li><li><span class="link">Därför</span> vill Riksbanken att inflationen ska ligga runt <strong>2 %</strong>.</li></ol></article><article class="board deep" id="fraga-17"><div class="board-head"><span>Fråga 17</span></div><h4 class="deep-q">Varför finns det monopol på alkohol fast Sverige har blandekonomi?</h4><ol class="chain"><li>I en blandekonomi styr <strong>marknaden</strong> det mesta, men <strong>staten</strong> styr vissa delar.</li><li>Nästan alla länder <strong>begränsar</strong> handeln med vissa varor, till exempel <strong>alkohol, mediciner och vapen</strong>.</li><li>Alkohol kan vara <strong>skadligt</strong> för människor.</li><li><span class="link">Därför</span> har staten bestämt att bara <strong>Systembolaget</strong> får sälja alkohol i butik. Det är ett <strong>monopol</strong>.</li><li><span class="link">Då</span> styrs priset inte av <strong>utbud och efterfrågan</strong> på vanligt sätt.</li><li>Staten tar också ut <strong>punktskatt</strong> på alkohol, och syftet är <strong>detsamma</strong>: att människor ska dricka <strong>mindre</strong>.</li></ol></article></div><h3 class="group-title">Resonera om två sidor</h3><p class="part-note">Här finns inget rätt svar. Visa att du förstår <strong>båda sidor</strong>, och avsluta med vad <strong>du</strong> tycker och <strong>varför</strong>.</p><article class="board deep" id="fraga-18"><div class="board-head"><span>Fråga 18</span></div><h4 class="deep-q">Ska privata företag få tjäna pengar på skola och vård?</h4><p class="deep-bg">Sedan 1990-talet får <strong>privata företag</strong> driva till exempel <strong>friskolor</strong> och <strong>vårdcentraler</strong>. Verksamheten betalas med <strong>skattepengar</strong>.</p><div class="sides"><div class="side" style="--c:var(--valfard);--t:var(--valfard-tint)"><p class="side-title">För</p><ul><li><strong>Konkurrens</strong> kan ge <strong>högre kvalitet</strong>, <span class="link">eftersom</span> skolor och vårdcentraler måste vara bra för att människor ska välja dem.</li><li>Privata företag kan arbeta <strong>effektivare</strong>.</li><li>Människor får <strong>valfrihet</strong> att själva välja.</li></ul></div><div class="side" style="--c:var(--skatt);--t:var(--skatt-tint)"><p class="side-title">Emot</p><ul><li>Vissa företag tar ut <strong>stora vinster</strong> genom <strong>mindre personal</strong> eller <strong>sämre kvalitet</strong>.</li><li><strong>Skattepengar</strong> ska gå till välfärden och inte till <strong>företagsägare</strong>.</li><li>Företag startar hellre där det bor många, men samhället måste ge välfärd till <strong>alla</strong>, även i <strong>glesbygd</strong>.</li></ul></div></div><div class="mall"><p class="extra-label">Avsluta med din åsikt</p><p>Jag tycker att … <span class="link">eftersom</span> … .</p><p>Det viktigaste argumentet för mig är … .</p><p><span class="link">Samtidigt</span> förstår jag att andra tycker … , <span class="link">eftersom</span> … .</p></div></article><article class="board deep" id="fraga-19"><div class="board-head"><span>Fråga 19</span></div><h4 class="deep-q">Är marknadsekonomi eller planekonomi bäst?</h4><p class="deep-bg">I en <strong>marknadsekonomi</strong> styr <strong>utbud och efterfrågan</strong>. I en <strong>planekonomi</strong> bestämmer <strong>staten</strong>.</p><div class="sides"><div class="side" style="--c:var(--valfard);--t:var(--valfard-tint)"><p class="side-title">Talar för marknadsekonomi</p><ul><li><strong>Konkurrens</strong> gör att företagen måste göra <strong>bra varor</strong> till bra priser.</li><li>Människor har <strong>frihet</strong> att starta företag och välja vad de köper.</li><li><span class="link">Men</span> det kan bli <strong>stora klyftor</strong>, och den som har lite pengar kan få svårt att få <strong>vård och utbildning</strong>.</li></ul></div><div class="side" style="--c:var(--sektor);--t:var(--sektor-tint)"><p class="side-title">Talar för planekonomi</p><ul><li>Staten kan se till att <strong>alla</strong> får <strong>sjukvård och utbildning</strong>.</li><li>Det blir lättare att nå <strong>politiska mål</strong>, till exempel att minska <strong>skillnaderna</strong>.</li><li><span class="link">Men</span> det kan bli <strong>brist</strong> och <strong>sämre kvalitet</strong>, och vissa menar att systemet kan bli <strong>odemokratiskt</strong>.</li></ul></div></div><p class="deep-note"><strong>Inget land</strong> har helt ren marknadsekonomi eller planekonomi. Du kan också resonera om vilken <strong>blandning</strong> som fungerar bäst.</p><div class="mall"><p class="extra-label">Avsluta med din åsikt</p><p>Jag tycker att … <span class="link">eftersom</span> … .</p><p>Det viktigaste argumentet för mig är … .</p><p><span class="link">Samtidigt</span> förstår jag att andra tycker … , <span class="link">eftersom</span> … .</p></div></article><article class="board deep" id="fraga-20"><div class="board-head"><span>Fråga 20</span></div><h4 class="deep-q">Ska skatten vara hög eller låg?</h4><p class="deep-bg">De flesta är <strong>överens</strong> om att vi ska ha vissa saker <strong>gemensamt</strong>, till exempel skola, rättsväsende och försvar. Men partierna är oense om hur <strong>stora</strong> skatterna ska vara.</p><div class="sides"><div class="side" style="--c:var(--valfard);--t:var(--valfard-tint)"><p class="side-title">Talar för högre skatt</p><ul><li>Det blir mer pengar till <strong>skola, vård, omsorg</strong> och <strong>polis</strong>.</li><li>Skatten kan <strong>minska klyftorna</strong>, <span class="link">eftersom</span> de som tjänar mer betalar mer.</li><li>Alla får <strong>trygghet</strong> om de blir sjuka, arbetslösa eller gamla.</li></ul></div><div class="side" style="--c:var(--skatt);--t:var(--skatt-tint)"><p class="side-title">Talar för lägre skatt</p><ul><li>Människor får <strong>mer pengar kvar</strong> och kan själva bestämma vad de vill använda dem till.</li><li>Det kan <strong>löna sig mer</strong> att arbeta och utbilda sig.</li><li>Lägre skatt kan få <strong>fart på ekonomin</strong>, <span class="link">eftersom</span> människor konsumerar mer och företag kan anställa.</li></ul></div></div><p class="deep-note">Partier till <strong>vänster</strong> vill ofta ha högre skatt och mer välfärd. Partier till <strong>höger</strong> vill ofta sänka skatten.</p><div class="mall"><p class="extra-label">Avsluta med din åsikt</p><p>Jag tycker att … <span class="link">eftersom</span> … .</p><p>Det viktigaste argumentet för mig är … .</p><p><span class="link">Samtidigt</span> förstår jag att andra tycker … , <span class="link">eftersom</span> … .</p></div></article><article class="board deep" id="fraga-21"><div class="board-head"><span>Fråga 21</span><span>Utanför boken, bygger på s. 88</span></div><h4 class="deep-q">Vad händer med välfärden när fler blir äldre och färre arbetar?</h4><p class="deep-bg">Människor i Sverige <strong>lever allt längre</strong>. Bilden på s. 88 visar att vi får mest av välfärden när vi är <strong>unga och gamla</strong>, och betalar mest när vi <strong>arbetar</strong>.</p><ol class="chain"><li><span class="link">Eftersom</span> välfärden betalas av dem som <strong>arbetar</strong>, blir det <strong>färre</strong> som betalar för <strong>fler</strong>.</li><li>De äldre behöver <strong>pension, vård och äldreomsorg</strong>, och <span class="link">därför</span> ökar <strong>kostnaderna</strong>.</li><li><span class="link">Det leder till</span> att det kan bli mindre pengar till annat, <span class="link">om</span> inget ändras.</li></ol><div class="sides sides--single"><div class="side" style="--c:var(--valfard);--t:var(--valfard-tint)"><p class="side-title">Möjliga lösningar</p><ul><li><strong>Fler arbetar längre</strong>: <span class="link">därför</span> har pensionsåldern höjts till <strong>64 år</strong>, och man får jobba kvar till <strong>69 år</strong>.</li><li><strong>Fler i arbete</strong>: <span class="link">om</span> fler har jobb, blir det fler som betalar skatt.</li><li><strong>Högre skatt</strong>: det ger mer pengar, <span class="link">men</span> de som arbetar får mindre kvar.</li></ul></div></div><div class="mall"><p class="extra-label">Avsluta med din åsikt</p><p>Jag tycker att … <span class="link">eftersom</span> … .</p><p>Det viktigaste argumentet för mig är … .</p><p><span class="link">Samtidigt</span> förstår jag att andra tycker … , <span class="link">eftersom</span> … .</p></div></article></section>
+    <p class="foot">Svaren bygger på läroboken Fundament. Pensionsåldern i boken är 62 år. Dagens regler står i rutan Bra att veta på kort 2.</p>
+  </div>
+  <div class="mode" id="mode-testa" role="tabpanel" aria-labelledby="mode-btn-testa" hidden>
+    <section id="testa" class="test-section" aria-label="Testa dig själv"><div class="test-layout"><div class="quiz-tabs test-menu" role="tablist" aria-label="Välj test" aria-orientation="vertical"><div class="test-menu-group" role="presentation"><p class="test-group" role="presentation">Begrepp</p><div class="test-menu-btns" role="presentation"><button type="button" role="tab" id="tab-kryss" aria-selected="true" aria-controls="tp-kryss">Kryssfrågor</button><button type="button" role="tab" id="tab-para" aria-selected="false" aria-controls="tp-para" tabindex="-1">Para ihop</button><button type="button" role="tab" id="tab-konjunktur" aria-selected="false" aria-controls="tp-konjunktur" tabindex="-1">Hög- eller lågkonjunktur?</button><button type="button" role="tab" id="tab-system" aria-selected="false" aria-controls="tp-system" tabindex="-1">Vilket ekonomiskt system?</button></div></div><div class="test-menu-group" role="presentation"><p class="test-group" role="presentation">Välfärdssystemet</p><div class="test-menu-btns" role="presentation"><button type="button" role="tab" id="tab-livet" aria-selected="false" aria-controls="tp-livet" tabindex="-1">Vad får man när i livet?</button></div></div><div class="test-menu-group" role="presentation"><p class="test-group" role="presentation">Kommun, region och stat</p><div class="test-menu-btns" role="presentation"><button type="button" role="tab" id="tab-ansvar" aria-selected="false" aria-controls="tp-ansvar" tabindex="-1">Vem ansvarar för vad?</button><button type="button" role="tab" id="tab-pengar" aria-selected="false" aria-controls="tp-pengar" tabindex="-1">Vart går pengarna?</button></div></div><div class="test-menu-group" role="presentation"><p class="test-group" role="presentation">Ekonomiska kretsloppet</p><div class="test-menu-btns" role="presentation"><button type="button" role="tab" id="tab-kretslopp" aria-selected="false" aria-controls="tp-kretslopp" tabindex="-1">Fyll i kretsloppet</button></div></div><div class="test-menu-group" role="presentation"><p class="test-group" role="presentation">Samband</p><div class="test-menu-btns" role="presentation"><button type="button" role="tab" id="tab-kedjor" aria-selected="false" aria-controls="tp-kedjor" tabindex="-1">Sätt kedjan i ordning</button></div></div></div><article class="board quiz test-board"><div class="test-panel" id="tp-kryss" role="tabpanel" aria-labelledby="tab-kryss"><p class="test-group">Begrepp</p><h3 class="test-title">Kryssfrågor om begreppen</h3><p class="quiz-intro">16 frågor. Välj alla svar som stämmer. Det kan vara fler än ett rätt svar.</p><div class="quiz-panel test-body" id="panel-kryss"></div></div><div class="test-panel" id="tp-para" role="tabpanel" aria-labelledby="tab-para" hidden><p class="test-group">Begrepp</p><h3 class="test-title">Para ihop begrepp och förklaring</h3><p class="quiz-intro">Dra varje begrepp till rätt förklaring, i två omgångar med åtta begrepp.</p><div class="quiz-panel test-body" data-ex="para"></div></div><div class="test-panel" id="tp-konjunktur" role="tabpanel" aria-labelledby="tab-konjunktur" hidden><p class="test-group">Begrepp</p><h3 class="test-title">Hög- eller lågkonjunktur?</h3><p class="quiz-intro">Sortera kännetecknen. Hör de till goda tider eller sämre tider?</p><div class="quiz-panel test-body" data-ex="konjunktur"></div></div><div class="test-panel" id="tp-system" role="tabpanel" aria-labelledby="tab-system" hidden><p class="test-group">Begrepp</p><h3 class="test-title">Vilket ekonomiskt system?</h3><p class="quiz-intro">Sortera påståendena efter vilket ekonomiskt system de beskriver.</p><div class="quiz-panel test-body" data-ex="system"></div></div><div class="test-panel" id="tp-livet" role="tabpanel" aria-labelledby="tab-livet" hidden><p class="test-group">Välfärdssystemet</p><h3 class="test-title">Vad får man när i livet?</h3><p class="quiz-intro">Sortera bidragen och välfärden efter när i livet man oftast får dem.</p><div class="quiz-panel test-body" data-ex="livet"></div></div><div class="test-panel" id="tp-ansvar" role="tabpanel" aria-labelledby="tab-ansvar" hidden><p class="test-group">Kommun, region och stat</p><h3 class="test-title">Vem ansvarar för vad?</h3><p class="quiz-intro">Sortera uppgifterna efter vem som ansvarar för dem: kommunen, regionen eller staten.</p><div class="quiz-panel test-body" data-ex="ansvar"></div></div><div class="test-panel" id="tp-pengar" role="tabpanel" aria-labelledby="tab-pengar" hidden><p class="test-group">Kommun, region och stat</p><h3 class="test-title">Vart går pengarna?</h3><p class="quiz-intro">Sortera skatterna och avgifterna efter vem som får pengarna.</p><div class="quiz-panel test-body" data-ex="pengar"></div></div><div class="test-panel" id="tp-kretslopp" role="tabpanel" aria-labelledby="tab-kretslopp" hidden><p class="test-group">Ekonomiska kretsloppet</p><h3 class="test-title">Fyll i kretsloppet</h3><p class="quiz-intro">Vad går längs varje pil? Dra rätt ord till varje pil. Ett av orden finns två gånger.</p><div class="quiz-panel test-body" data-ex="kretslopp"></div></div><div class="test-panel" id="tp-kedjor" role="tabpanel" aria-labelledby="tab-kedjor" hidden><p class="test-group">Samband</p><h3 class="test-title">Sätt kedjan i ordning</h3><p class="quiz-intro">Stegen i kedjan har hamnat i fel ordning. Lägg dem i rätt ordning, från det som händer först till det som händer sist.</p><div class="quiz-panel test-body" data-ex="kedjor"></div></div></article></div></section>
+  </div>
+</div>
+<script type="application/json" id="quiz-data">{"questions": [{"b": "Konsument", "n": 17, "q": "Vilka av de här personerna är konsumenter?", "opts": [["Du köper en läsk i affären", true], ["Du går till frisören och klipper dig", true], ["En familj handlar mat för veckan", true], ["Ett bageri bakar bröd för att sälja", false], ["En fabrik tillverkar mobiltelefoner", false]], "why": "En **konsument** köper och använder varor och tjänster. Bageriet och fabriken tillverkar och säljer, så de är **producenter**."}, {"b": "Producent", "n": 18, "q": "Vad stämmer om en producent?", "opts": [["En producent tillverkar eller säljer varor och tjänster", true], ["Ett bageri som säljer bröd är en producent", true], ["Den som köper en tröja är en producent", false], ["Producent är samma sak som offentlig sektor", false], ["En producent är den som använder varan", false]], "why": "En **producent** tillverkar eller säljer. Den som köper och använder varan är **konsument**."}, {"b": "Offentlig sektor", "n": 19, "q": "Vilka av de här hör till den offentliga sektorn?", "opts": [["Kommunens skolor", true], ["Regionens sjukhus", true], ["Polisen", true], ["En privat klädbutik", false], ["En bank", false]], "why": "Den **offentliga sektorn** är det som **staten, regionerna och kommunerna** ansvarar för. Klädbutiken och banken är privata företag."}, {"b": "Inkomstskatt", "n": 20, "q": "Vad stämmer om inkomstskatt?", "opts": [["Den betalas på lönen", true], ["Den brukar vara 30–35 % av lönen", true], ["Den ingår i priset när du köper en tröja", false], ["Den betalas bara av företag", false], ["Den är en extra skatt på bensin och tobak", false]], "why": "**Inkomstskatt** betalar du på din **lön**, ungefär 30–35 %. Skatten i priset på en tröja är **moms**, och den extra skatten på bensin och tobak är **punktskatt**."}, {"b": "Moms", "n": 21, "q": "Vad stämmer om moms?", "opts": [["Momsen ingår i priset på nästan allt du köper", true], ["Momsen går till staten", true], ["Moms är en indirekt skatt", true], ["Moms betalas bara på tobak och alkohol", false], ["Moms dras direkt från lönen", false]], "why": "**Moms** läggs på **nästan allt du köper** och går till **staten**. Den är en **indirekt skatt** eftersom du betalar den när du handlar."}, {"b": "Punktskatt", "n": 22, "q": "Vilka varor har punktskatt?", "opts": [["Tobak", true], ["Alkohol", true], ["Bensin", true], ["Mjölk", false], ["Skolböcker", false]], "why": "**Punktskatt** är en **extra skatt** på varor som är skadliga för oss eller för miljön. Syftet är att vi ska använda **mindre** av dem."}, {"b": "Arbetsgivaravgifter", "n": 23, "q": "Vad stämmer om arbetsgivaravgifter?", "opts": [["Arbetsgivaren betalar dem till staten", true], ["De betalas utöver lönen", true], ["De går bland annat till pensioner och sjukförsäkring", true], ["De dras från den anställdas lön", false], ["De betalas när man köper något i affären", false]], "why": "**Arbetsgivaravgifter** betalas av **arbetsgivaren**, inte av den anställda. De betalas **utöver lönen** och går till bland annat **pensioner och sjukförsäkring**."}, {"b": "Högkonjunktur", "n": 24, "q": "Vad kännetecknar en högkonjunktur?", "opts": [["Låg arbetslöshet", true], ["Stor efterfrågan på varor och tjänster", true], ["Staten får in mer skatt", true], ["Många företag går i konkurs", false], ["Priserna sjunker", false]], "why": "**Högkonjunktur** är **goda tider**: många har jobb, företagen tjänar pengar och staten får in mer skatt. Priserna brukar **stiga**, inte sjunka."}, {"b": "Lågkonjunktur", "n": 25, "q": "Vad händer i en lågkonjunktur?", "opts": [["Fler blir arbetslösa", true], ["Efterfrågan minskar", true], ["Kommuner och regioner kan behöva spara", true], ["Staten får in mer skatt", false], ["Företagen anställer fler", false]], "why": "**Lågkonjunktur** är **sämre tider**. Efterfrågan minskar, fler blir arbetslösa och staten får in **mindre** skatt. Därför kan kommuner och regioner behöva spara."}, {"b": "Inflation", "n": 26, "q": "Vad betyder inflation?", "opts": [["Priserna stiger", true], ["Pengarna blir mindre värda", true], ["Du får mer för samma summa pengar", false], ["Priser och löner sjunker", false], ["Alla får automatiskt högre lön", false]], "why": "**Inflation** betyder att **priserna stiger** och att du får **mindre** för samma pengar. När priser och löner sjunker kallas det **deflation**."}, {"b": "Marknadsekonomi", "n": 27, "q": "Vad stämmer om marknadsekonomi?", "opts": [["Priserna styrs av utbud och efterfrågan", true], ["Företagen ägs privat", true], ["Staten bestämmer vad allt ska kosta", false], ["Staten är stor och styr det mesta", false], ["Det är bra med monopol", false]], "why": "I en **marknadsekonomi** styrs priserna av **utbud och efterfrågan**, och företagen ägs privat. Staten är liten, och det ska finnas **konkurrens**, inte monopol."}, {"b": "Utbud", "n": 28, "q": "Vad stämmer om utbud?", "opts": [["Utbud är hur mycket det finns av en vara på marknaden", true], ["Ett stort utbud brukar ge lägre pris", true], ["Utbud är hur mycket människor vill köpa", false], ["Ett litet utbud brukar ge lägre pris", false], ["Utbud betyder att staten bestämmer priset", false]], "why": "**Utbud** är hur mycket som **finns** att köpa. Finns det mycket sjunker priset, och finns det lite stiger det. Hur mycket människor **vill köpa** kallas **efterfrågan**."}, {"b": "Efterfrågan", "n": 29, "q": "Våren 2020 ville alla köpa handsprit. Vad stämmer?", "opts": [["Efterfrågan ökade", true], ["Priset steg", true], ["Det blev brist på handsprit", true], ["Utbudet var större än efterfrågan", false], ["Priset sjönk", false]], "why": "**Efterfrågan** är hur mycket människor **vill köpa**. När efterfrågan blev större än utbudet blev det **brist**, och **priset steg**."}, {"b": "Planekonomi", "n": 30, "q": "Vad stämmer om planekonomi?", "opts": [["Staten bestämmer vad som ska produceras och vad det ska kosta", true], ["Det kan bli brist på vissa varor", true], ["Det finns stor konkurrens mellan företag", false], ["Priserna styrs av utbud och efterfrågan", false], ["Människor har stor frihet att starta företag", false]], "why": "I en **planekonomi** bestämmer **staten**. Eftersom det är svårt att veta vad som behövs kan det bli **brist**, och utan konkurrens kan kvaliteten bli sämre."}, {"b": "Blandekonomi", "n": 31, "q": "Vad stämmer om blandekonomi?", "opts": [["Det är en blandning av marknadsekonomi och planekonomi", true], ["Staten styr vissa delar, till exempel skola och vård", true], ["Sverige har blandekonomi", true], ["Staten bestämmer över allt", false], ["Inget land har blandekonomi", false]], "why": "I en **blandekonomi** styr **staten** vissa delar och **marknaden** andra. **Sverige** och de flesta andra länder har blandekonomi."}, {"b": "Monopol", "n": 32, "q": "Vilket är ett exempel på monopol i Sverige?", "opts": [["Systembolaget, som ensamt får sälja alkohol i butik", true], ["Flera matbutiker i samma stad", false], ["Många mobilbolag som tävlar om kunderna", false], ["Klädbutikerna i ett köpcentrum", false], ["Frisörerna på en gata", false]], "why": "**Monopol** betyder att **bara en** får sälja en vara, så det finns **ingen konkurrens**. Systembolaget har monopol eftersom staten vill begränsa alkoholen."}], "exercises": {"ansvar": {"kind": "sort", "buckets": [["kommun", "Kommun", "skatt"], ["region", "Region", "valfard"], ["stat", "Stat", "sektor"]], "items": [["Grundskola", "kommun"], ["Gymnasium", "kommun"], ["Förskola", "kommun"], ["Äldreomsorg", "kommun"], ["Hemtjänst", "kommun"], ["Försörjningsstöd", "kommun"], ["Sophämtning", "kommun"], ["Vatten och avlopp", "kommun"], ["Räddningstjänst", "kommun"], ["Sjukhus", "region"], ["Vårdcentral", "region"], ["Tandvård", "region"], ["Kollektivtrafik", "region"], ["Polis", "stat"], ["Försvar", "stat"], ["Domstolar", "stat"], ["Sjukpenning", "stat"], ["Pension", "stat"], ["Studiemedel", "stat"], ["Barnbidrag", "stat"]]}, "pengar": {"kind": "sort", "buckets": [["kommun", "Kommun", "skatt"], ["region", "Region", "valfard"], ["stat", "Stat", "sektor"]], "items": [["Kommunalskatt", "kommun"], ["Avgift för sophämtning", "kommun"], ["Avgift för vatten och avlopp", "kommun"], ["Avgift för förskola", "kommun"], ["Regionskatt (landstingsskatt)", "region"], ["Avgift för besök på vårdcentralen", "region"], ["Busskort", "region"], ["Moms", "stat"], ["Punktskatt", "stat"], ["Bolagsskatt", "stat"], ["Statlig skatt", "stat"], ["Skatt på kapitalinkomster", "stat"], ["Arbetsgivaravgifter", "stat"]]}, "livet": {"kind": "sort", "buckets": [["ung", "Barn och unga", "skatt"], ["vuxen", "Vuxen", "sektor"], ["aldre", "Äldre", "valfard"]], "items": [["Barnbidrag", "ung"], ["Studiebidrag", "ung"], ["Studiemedel", "ung"], ["Förskola", "ung"], ["Grundskola", "ung"], ["Sjukpenning", "vuxen"], ["Föräldrapenning", "vuxen"], ["A-kassa", "vuxen"], ["Bostadsbidrag", "vuxen"], ["Pension", "aldre"], ["Äldreomsorg", "aldre"], ["Hemtjänst", "aldre"]]}, "konjunktur": {"kind": "sort", "buckets": [["hog", "Högkonjunktur", "valfard"], ["lag", "Lågkonjunktur", "skatt"]], "items": [["Låg arbetslöshet", "hog"], ["Stor efterfrågan", "hog"], ["Hög produktion", "hog"], ["Staten får in mer skatt", "hog"], ["Risk för inflation", "hog"], ["Företagen anställer fler", "hog"], ["Fler blir arbetslösa", "lag"], ["Efterfrågan minskar", "lag"], ["Fler företag går i konkurs", "lag"], ["Staten får in mindre skatt", "lag"], ["Kommunerna måste spara", "lag"], ["Risk för deflation", "lag"]]}, "system": {"kind": "sort", "buckets": [["marknad", "Marknadsekonomi", "valfard"], ["plan", "Planekonomi", "sektor"], ["bland", "Blandekonomi", "lila"]], "items": [["Alla företag ägs privat", "marknad"], ["Priserna styrs helt av utbud och efterfrågan", "marknad"], ["Staten lägger sig inte i ekonomin", "marknad"], ["Liten stat", "marknad"], ["Alla företag ägs gemensamt", "plan"], ["Staten bestämmer priserna", "plan"], ["Risk för brist och sämre kvalitet", "plan"], ["Stor stat", "plan"], ["En del företag ägs privat och en del gemensamt", "bland"], ["Staten styr skola och vård, marknaden styr butikerna", "bland"], ["Så fungerar det i Sverige", "bland"], ["Medelstor stat", "bland"]]}, "kretslopp": {"kind": "slots", "layout": "flow", "shuffle": false, "diagram": "<svg class=\"flow-svg\" viewBox=\"0 0 640 400\" role=\"img\" aria-label=\"Kretsloppet med hushåll till vänster, företag till höger, offentlig sektor överst och banker nederst. Sju numrerade pilar går mellan dem.\">\n<defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#5B6676\"/><\/marker><\/defs>\n<g stroke=\"#5B6676\" stroke-width=\"3\" fill=\"none\" marker-end=\"url(#ah)\">\n<line x1=\"178\" y1=\"188\" x2=\"460\" y2=\"188\"/>\n<line x1=\"462\" y1=\"214\" x2=\"180\" y2=\"214\"/>\n<line x1=\"108\" y1=\"173\" x2=\"242\" y2=\"80\"/>\n<line x1=\"262\" y1=\"80\" x2=\"132\" y2=\"171\"/>\n<line x1=\"532\" y1=\"173\" x2=\"400\" y2=\"80\"/>\n<line x1=\"108\" y1=\"228\" x2=\"242\" y2=\"322\"/>\n<line x1=\"400\" y1=\"322\" x2=\"532\" y2=\"229\"/>\n<\/g>\n<g font-family=\"Atkinson Hyperlegible, Segoe UI, sans-serif\" font-weight=\"700\">\n<rect x=\"24\" y=\"176\" width=\"152\" height=\"50\" rx=\"10\" fill=\"#FCE8D9\" stroke=\"#E0711A\" stroke-width=\"2\"/><text x=\"100\" y=\"207\" text-anchor=\"middle\" font-size=\"19\" fill=\"#1E2530\">Hushåll<\/text>\n<rect x=\"464\" y=\"176\" width=\"152\" height=\"50\" rx=\"10\" fill=\"#DDEEE1\" stroke=\"#3F8A4B\" stroke-width=\"2\"/><text x=\"540\" y=\"207\" text-anchor=\"middle\" font-size=\"19\" fill=\"#1E2530\">Företag<\/text>\n<rect x=\"234\" y=\"28\" width=\"172\" height=\"50\" rx=\"10\" fill=\"#E3E9F2\" stroke=\"#254875\" stroke-width=\"2\"/><text x=\"320\" y=\"59\" text-anchor=\"middle\" font-size=\"19\" fill=\"#1E2530\">Offentlig sektor<\/text>\n<rect x=\"244\" y=\"324\" width=\"152\" height=\"50\" rx=\"10\" fill=\"#ECE6F8\" stroke=\"#6E52B8\" stroke-width=\"2\"/><text x=\"320\" y=\"355\" text-anchor=\"middle\" font-size=\"19\" fill=\"#1E2530\">Banker<\/text>\n<\/g>\n<g font-family=\"Atkinson Hyperlegible, Segoe UI, sans-serif\" font-weight=\"700\" font-size=\"15\" text-anchor=\"middle\">\n<circle cx=\"320\" cy=\"168\" r=\"14\" fill=\"#254875\"/><text x=\"320\" y=\"173\" fill=\"#FFFFFF\">1<\/text>\n<circle cx=\"320\" cy=\"236\" r=\"14\" fill=\"#254875\"/><text x=\"320\" y=\"241\" fill=\"#FFFFFF\">2<\/text>\n<circle cx=\"158\" cy=\"118\" r=\"14\" fill=\"#254875\"/><text x=\"158\" y=\"123\" fill=\"#FFFFFF\">3<\/text>\n<circle cx=\"212\" cy=\"138\" r=\"14\" fill=\"#254875\"/><text x=\"212\" y=\"143\" fill=\"#FFFFFF\">4<\/text>\n<circle cx=\"482\" cy=\"118\" r=\"14\" fill=\"#254875\"/><text x=\"482\" y=\"123\" fill=\"#FFFFFF\">5<\/text>\n<circle cx=\"158\" cy=\"284\" r=\"14\" fill=\"#254875\"/><text x=\"158\" y=\"289\" fill=\"#FFFFFF\">6<\/text>\n<circle cx=\"482\" cy=\"284\" r=\"14\" fill=\"#254875\"/><text x=\"482\" y=\"289\" fill=\"#FFFFFF\">7<\/text>\n<\/g><\/svg>", "hint": "Dra ett ord till varje pil. På mobilen trycker du först på ordet och sedan på pilen.", "rounds": [{"title": "", "slots": [["<b>1<\/b> Från hushåll till företag", "Arbete och konsumtion"], ["<b>2<\/b> Från företag till hushåll", "Varor, tjänster och löner"], ["<b>3<\/b> Från hushåll till offentlig sektor", "Skatt"], ["<b>4<\/b> Från offentlig sektor till hushåll", "Service och bidrag"], ["<b>5<\/b> Från företag till offentlig sektor", "Skatt"], ["<b>6<\/b> Från hushåll till banker", "Sparande"], ["<b>7<\/b> Från banker till företag", "Lån"]]}]}, "kedjor": {"kind": "slots", "layout": "order", "shuffle": false, "diagram": "", "hint": "Dra stegen till rätt plats. På mobilen trycker du först på steget och sedan på platsen.", "rounds": [{"title": "Hushållen slutar handla", "slots": [["1", "Hushållen slutar handla."], ["2", "Företagen säljer mindre."], ["3", "Företagen säger upp personal."], ["4", "Fler blir arbetslösa."], ["5", "Kommunen får in mindre skatt och måste spara."]]}, {"title": "Högkonjunktur", "slots": [["1", "Efterfrågan är stor och de flesta har jobb."], ["2", "Företagen behöver mer arbetskraft."], ["3", "De anställda kan kräva högre löner."], ["4", "Företagens kostnader ökar."], ["5", "Priserna stiger, och det blir inflation."]]}, {"title": "Handsprit 2020", "slots": [["1", "Coronaviruset kommer till Sverige."], ["2", "Väldigt många vill köpa handsprit."], ["3", "Efterfrågan blir större än utbudet."], ["4", "Det blir brist på handsprit."], ["5", "Priset stiger."]]}, {"title": "Sänkt skatt", "slots": [["1", "Staten sänker skatten."], ["2", "Hushållen får mer pengar kvar av lönen."], ["3", "Hushållen konsumerar mer."], ["4", "Företagen säljer mer."], ["5", "Företagen anställer fler."]]}, {"title": "Friskolan", "slots": [["1", "Invånarna betalar kommunalskatt."], ["2", "Kommunen får pengar."], ["3", "Kommunen betalar en skolpeng för varje elev."], ["4", "Eleven väljer en friskola."], ["5", "Skolpengen går till friskolan."]]}]}, "para": {"kind": "slots", "layout": "pair", "shuffle": true, "hint": "Dra varje begrepp till rätt förklaring. På mobilen trycker du först på begreppet och sedan på förklaringen.", "rounds": [{"title": "Omgång 1", "slots": [["Köper och använder varor och tjänster", "Konsument"], ["Tillverkar eller säljer varor och tjänster", "Producent"], ["Det som staten, regionerna och kommunerna ansvarar för", "Offentlig sektor"], ["Skatt som du betalar på din lön", "Inkomstskatt"], ["Skatt som ingår i priset på nästan allt du köper", "Moms"], ["Extra skatt på till exempel tobak, alkohol och bensin", "Punktskatt"], ["Pengar som arbetsgivaren betalar till staten utöver lönen", "Arbetsgivaravgifter"], ["Bara ett företag får sälja en viss vara", "Monopol"]]}, {"title": "Omgång 2", "slots": [["Goda tider: många har jobb och företagen tjänar pengar", "Högkonjunktur"], ["Sämre tider: fler blir arbetslösa och företagen säljer mindre", "Lågkonjunktur"], ["Priserna stiger och pengarna blir mindre värda", "Inflation"], ["Priserna styrs av utbud och efterfrågan", "Marknadsekonomi"], ["Hur mycket det finns av en vara på marknaden", "Utbud"], ["Hur mycket människor vill köpa av en vara", "Efterfrågan"], ["Staten bestämmer vad som produceras och vad det kostar", "Planekonomi"], ["Staten styr vissa delar och marknaden styr andra", "Blandekonomi"]]}]}}}</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('quiz-data').textContent);
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function md(s) { return esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function $$(root, sel) { return Array.prototype.slice.call(root.querySelectorAll(sel)); }
+
+
+  /* ---------- Lägen: Plugga och Testa dig ---------- */
+  var modeBtns = $$(document, '.mode-switch [role="tab"]');
+  function setMode(btn, scroll) {
+    modeBtns.forEach(function (x) {
+      var on = x === btn;
+      x.setAttribute('aria-selected', on ? 'true' : 'false');
+      x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+    });
+    try { localStorage.setItem('provplugg-lage', btn.id); } catch (e) {}
+    if (scroll) {
+      var bar = document.querySelector('.mode-bar');
+      var top = bar.getBoundingClientRect().top + window.pageYOffset;
+      if (window.pageYOffset > top) window.scrollTo(0, top);
+    }
+  }
+  modeBtns.forEach(function (b, i) {
+    b.addEventListener('click', function () { setMode(b, true); });
+    b.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        var n = modeBtns[(i + 1) % modeBtns.length];
+        setMode(n, true); n.focus(); e.preventDefault();
+      }
+    });
+  });
+  function modeOf(el) {
+    var m = el && el.closest ? el.closest('.mode') : null;
+    return m ? document.querySelector('.mode-switch [aria-controls="' + m.id + '"]') : null;
+  }
+  function openHash(h) {
+    if (!h || h.length < 2) return false;
+    var id = h.slice(1);
+    if (id === 'testa' || id.indexOf('test-') === 0) { setMode(document.getElementById('mode-btn-testa'), false); return true; }
+    var mb = modeOf(document.getElementById(id));
+    if (mb) { setMode(mb, false); return true; }
+    return false;
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var mb = modeOf(document.getElementById(a.getAttribute('href').slice(1)));
+    if (mb && mb.getAttribute('aria-selected') !== 'true') setMode(mb, false);
+  });
+  if (!openHash(location.hash)) {
+    var saved = null;
+    try { saved = localStorage.getItem('provplugg-lage'); } catch (e) {}
+    var sb = saved && document.getElementById(saved);
+    if (sb && modeBtns.indexOf(sb) > -1) setMode(sb, false);
+  }
+  window.addEventListener('hashchange', function () { openHash(location.hash); });
+
+  /* ---------- Flikar ---------- */
+  $$(document, '.quiz-tabs').forEach(function (list) {
+    var tabs = $$(list, '[role="tab"]');
+    function selectTab(t) {
+      tabs.forEach(function (x) {
+        var on = x === t;
+        x.setAttribute('aria-selected', on ? 'true' : 'false');
+        x.tabIndex = on ? 0 : -1;
+        document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+      });
+    }
+    var fromHash = location.hash && document.getElementById('tab-' + location.hash.replace('#test-', ''));
+    if (location.hash.indexOf('#test-') === 0 && fromHash && tabs.indexOf(fromHash) > -1) selectTab(fromHash);
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () {
+        selectTab(t);
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        var r = panel.getBoundingClientRect();
+        if (r.top > window.innerHeight * 0.6) panel.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      });
+      t.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+          selectTab(n); n.focus(); e.preventDefault();
+        }
+      });
+    });
+  });
+
+  /* ---------- Kryssfrågor ---------- */
+  (function () {
+    var K = document.getElementById('panel-kryss');
+    if (!K) return;
+    var order, idx, score, missed;
+
+    function startK() {
+      order = shuffle(DATA.questions.map(function (q, i) { return i; }));
+      idx = 0; score = 0; missed = [];
+      renderQ(false);
+    }
+
+    function renderQ(focus) {
+      var q = DATA.questions[order[idx]];
+      var opts = shuffle(q.opts.map(function (o) { return { t: o[0], ok: o[1] }; }));
+      K.innerHTML =
+        '<div class="q-top"><span>Fråga ' + (idx + 1) + ' av ' + order.length + '</span><span>' + score + ' helt rätt</span></div>' +
+        '<div class="q-bar" aria-hidden="true"><span style="width:' + (idx / order.length * 100) + '%"></span></div>' +
+        '<fieldset class="q"><legend class="q-text" tabindex="-1">' + md(q.q) + '</legend>' +
+        '<p class="q-hint">Välj alla som stämmer. Det kan vara fler än ett rätt svar.</p>' +
+        '<div class="opts">' + opts.map(function (o, k) {
+          return '<label class="opt" data-ok="' + (o.ok ? 1 : 0) + '"><input type="checkbox" id="q' + idx + '-opt-' + k + '">' +
+            '<span class="opt-box" aria-hidden="true"></span><span class="opt-text">' + md(o.t) + '</span><span class="opt-mark"></span></label>';
+        }).join('') + '</div></fieldset>' +
+        '<div class="q-feedback" aria-live="polite"></div>' +
+        '<div class="q-actions"><button type="button" class="btn btn--primary" id="q-check" disabled>Svara</button></div>';
+      var boxes = $$(K, '.opt input');
+      var btn = K.querySelector('#q-check');
+      boxes.forEach(function (b) { b.addEventListener('change', function () { btn.disabled = !boxes.some(function (x) { return x.checked; }); }); });
+      btn.addEventListener('click', function () { check(q, btn); });
+      if (focus) K.querySelector('.q-text').focus();
+    }
+
+    function check(q, btn) {
+      var found = 0, total = 0, wrong = 0;
+      $$(K, '.opt').forEach(function (lab) {
+        var ok = lab.getAttribute('data-ok') === '1';
+        var input = lab.querySelector('input');
+        var on = input.checked;
+        var mark = lab.querySelector('.opt-mark');
+        input.disabled = true;
+        lab.classList.add('is-locked');
+        if (ok) total++;
+        if (ok && on) { found++; lab.classList.add('is-right'); mark.textContent = 'Rätt'; }
+        else if (!ok && on) { wrong++; lab.classList.add('is-wrong'); mark.textContent = 'Fel'; }
+        else if (ok && !on) { lab.classList.add('is-missed'); mark.textContent = 'Rätt svar'; }
+      });
+      var perfect = found === total && wrong === 0;
+      if (perfect) score++; else missed.push(q);
+      var title, cls;
+      if (perfect) { title = 'Helt rätt!'; cls = 'fb--ok'; }
+      else if (found > 0) {
+        title = 'Delvis rätt. Du hittade ' + found + ' av ' + total + ' rätta svar.' + (wrong ? ' Du markerade också ' + wrong + ' som är fel.' : '');
+        cls = 'fb--half';
+      } else { title = 'Inte rätt den här gången.'; cls = 'fb--bad'; }
+      K.querySelector('.q-feedback').innerHTML =
+        '<p class="fb-title ' + cls + '">' + esc(title) + '</p><p>' + md(q.why) + '</p>' +
+        '<p><a class="fb-link" href="#kort-' + q.n + '">Läs kort ' + q.n + ' igen</a></p>';
+      var last = idx === order.length - 1;
+      var nb = btn.cloneNode(false);
+      nb.textContent = last ? 'Se resultat' : 'Nästa fråga';
+      nb.disabled = false;
+      btn.parentNode.replaceChild(nb, btn);
+      nb.addEventListener('click', function () { if (last) results(); else { idx++; renderQ(true); } });
+      nb.focus();
+    }
+
+    function results() {
+      var n = order.length;
+      var msg = score === n ? 'Alla rätt! Du kan begreppen.' :
+        (score >= n * 0.75 ? 'Bra jobbat! Repetera de begrepp du missade.' : 'Läs korten för begreppen nedan och försök igen.');
+      K.innerHTML = '<div class="q-result"><p class="q-sub">Helt rätta svar</p><p class="q-big" tabindex="-1">' + score + ' av ' + n + '</p>' +
+        '<p class="q-msg">' + esc(msg) + '</p>' +
+        (missed.length ? '<p class="q-sub">Repetera de här begreppen</p><ul class="q-missed">' + missed.map(function (q) {
+          return '<li><a href="#kort-' + q.n + '">' + esc(q.b) + '</a></li>';
+        }).join('') + '</ul>' : '') +
+        '<button type="button" class="btn btn--primary" id="q-again">Gör om testet</button></div>';
+      K.querySelector('#q-again').addEventListener('click', function () { startK(); K.querySelector('.q-text').focus(); });
+      K.querySelector('.q-big').focus();
+    }
+
+    startK();
+  })();
+
+  /* ---------- Gemensamt för dra och släpp ---------- */
+  function enableDrag(root, onDrop) {
+    var dragId = null;
+    root.addEventListener('dragstart', function (e) {
+      var c = e.target.closest && e.target.closest('[data-id]');
+      if (!c) return;
+      dragId = c.getAttribute('data-id');
+      try { e.dataTransfer.setData('text/plain', dragId); e.dataTransfer.effectAllowed = 'move'; } catch (err) {}
+    });
+    root.addEventListener('dragover', function (e) {
+      var d = e.target.closest && e.target.closest('[data-drop]');
+      if (d && dragId) { e.preventDefault(); d.classList.add('is-over'); }
+    });
+    root.addEventListener('dragleave', function (e) {
+      var d = e.target.closest && e.target.closest('[data-drop]');
+      if (d && !d.contains(e.relatedTarget)) d.classList.remove('is-over');
+    });
+    root.addEventListener('drop', function (e) {
+      var d = e.target.closest && e.target.closest('[data-drop]');
+      if (!d || !dragId) return;
+      e.preventDefault();
+      var id = dragId; dragId = null;
+      onDrop(id, d.getAttribute('data-drop'));
+    });
+    root.addEventListener('dragend', function () {
+      dragId = null;
+      $$(root, '.is-over').forEach(function (x) { x.classList.remove('is-over'); });
+    });
+  }
+
+  function chipHtml(id, text, opts) {
+    return '<button type="button" class="chip' + (opts.long ? ' chip--long' : '') + (opts.placed ? ' chip--placed' : '') +
+      (opts.state ? ' ' + opts.state : '') + '" draggable="true" data-id="' + id + '" data-key="c' + id + '"' +
+      (opts.placed ? '' : ' aria-pressed="' + (opts.sel ? 'true' : 'false') + '"') + '>' + esc(text) +
+      (opts.fix ? '<span class="chip-fix">' + esc(opts.fix) + '</span>' : '') + '</button>';
+  }
+
+  function actions(S, total, right, extraNext) {
+    var allRight = S.checked && right === total;
+    var placedN = Object.keys(S.placed).length;
+    var h = '<div class="q-actions">';
+    if (allRight) h += extraNext || '<button type="button" class="btn btn--primary" data-act="restart">Gör om</button>';
+    else if (S.checked) h += '<button type="button" class="btn btn--primary" data-act="retry">Försök igen med de fel</button>';
+    else h += '<button type="button" class="btn btn--primary" data-act="check"' + (placedN ? '' : ' disabled') + '>Rätta</button>';
+    h += '<button type="button" class="btn" data-act="restart">Börja om</button></div>';
+    h += '<p class="pair-result" aria-live="polite">' + (S.checked ? (allRight ? 'Alla ' + right + ' rätt!' : right + ' av ' + total + ' rätt. De röda ligger fel.') : '') + '</p>';
+    return h;
+  }
+
+  function focusKey(root, key) { if (!key) return; var el = root.querySelector('[data-key="' + key + '"]'); if (el) el.focus(); }
+
+  /* ---------- Platser: para ihop, fyll i, sätt i ordning ---------- */
+  function makeSlots(root, cfg) {
+    var S;
+    function start(r) {
+      var round = cfg.rounds[r];
+      var slots = round.slots.map(function (s) { return { label: s[0], answer: s[1] }; });
+      if (cfg.shuffle) slots = shuffle(slots);
+      var chips = shuffle(round.slots.map(function (s, i) { return { id: String(i), t: s[1] }; }));
+      S = { r: r, slots: slots, chips: chips, placed: {}, sel: null, checked: false };
+      render();
+    }
+    function chipById(id) { for (var i = 0; i < S.chips.length; i++) if (S.chips[i].id === id) return S.chips[i]; return null; }
+    function slotOfChip(id) { for (var k in S.placed) if (S.placed[k] === id) return k; return null; }
+    function put(id, slot) {
+      var from = slotOfChip(id);
+      if (from !== null) delete S.placed[from];
+      if (slot !== null && slot !== 'bank') S.placed[slot] = id;
+      S.sel = null; S.checked = false;
+    }
+    function render(fk) {
+      var long = cfg.layout === 'order';
+      var free = S.chips.filter(function (c) { return slotOfChip(c.id) === null; });
+      var right = 0;
+      var items = S.slots.map(function (s, i) {
+        var id = S.placed[i];
+        var c = id != null ? chipById(id) : null;
+        var st = '';
+        if (S.checked && c) { if (c.t === s.answer) { st = ' is-right'; right++; } else st = ' is-wrong'; }
+        var inner = c ? chipHtml(c.id, c.t, { placed: true, long: long }) :
+          '<span class="slot-empty">' + (S.sel ? 'Lägg här' : (long ? 'Släpp ett steg här' : 'Släpp här')) + '</span>';
+        var label = cfg.layout === 'order' ? '<span class="step-n">' + esc(s.label) + '</span>' :
+          '<span class="slot-def">' + (cfg.layout === 'flow' ? s.label : esc(s.label)) + '</span>';
+        return '<li class="slot slot--' + cfg.layout + st + '">' + label +
+          '<span class="slot-side"><span class="slot-drop" data-drop="' + i + '" data-key="s' + i + '" role="button" tabindex="0">' + inner + '</span>' +
+          (S.checked && c && c.t !== s.answer ? '<span class="slot-fix">' + (long ? 'Fel plats' : 'Fel') + '</span>' : '') + '</span></li>';
+      }).join('');
+      var total = S.slots.length;
+      var rounds = cfg.rounds.length > 1 ?
+        '<div class="pair-rounds" role="group" aria-label="Välj omgång">' + cfg.rounds.map(function (rd, r) {
+          return '<button type="button" class="seg" data-r="' + r + '" aria-pressed="' + (r === S.r) + '">' + esc(rd.title || ('Omgång ' + (r + 1))) + '</button>';
+        }).join('') + '</div>' : '<span></span>';
+      var next = (S.r < cfg.rounds.length - 1) ? '<button type="button" class="btn btn--primary" data-act="next">Nästa ' + (cfg.layout === 'order' ? 'kedja' : 'omgång') + '</button>' : null;
+      root.innerHTML =
+        '<div class="pair-top">' + rounds + '<span class="pair-count">' + Object.keys(S.placed).length + ' av ' + total + ' placerade</span></div>' +
+        '<p class="q-hint">' + esc(cfg.hint) + '</p>' +
+        (cfg.diagram ? '<div class="flow-diagram">' + cfg.diagram + '</div>' : '') +
+        '<div class="bank' + (long ? ' bank--long' : '') + (S.sel ? ' is-armed' : '') + '" data-drop="bank">' +
+        (free.length ? free.map(function (c) { return chipHtml(c.id, c.t, { long: long, sel: S.sel === c.id }); }).join('') :
+          '<span class="bank-empty">Allt är placerat. Tryck på Rätta.</span>') + '</div>' +
+        '<ol class="slots' + (S.sel ? ' is-armed' : '') + '">' + items + '</ol>' +
+        actions(S, total, right, next);
+      focusKey(root, fk);
+    }
+    function dropOn(id, target) {
+      if (target === 'bank') { put(id, null); render(); return; }
+      var cur = S.placed[target];
+      if (cur != null && cur !== id) delete S.placed[target];
+      put(id, target); render('s' + target);
+    }
+    root.addEventListener('click', function (e) {
+      var t = e.target;
+      var seg = t.closest('.seg'); if (seg) { start(+seg.getAttribute('data-r')); return; }
+      var act = t.closest('[data-act]');
+      if (act) {
+        var a = act.getAttribute('data-act');
+        if (a === 'check') { S.checked = true; S.sel = null; render(); }
+        else if (a === 'retry') {
+          S.slots.forEach(function (s, i) { var c = S.placed[i] != null ? chipById(S.placed[i]) : null; if (c && c.t !== s.answer) delete S.placed[i]; });
+          S.checked = false; render();
+        }
+        else if (a === 'next') start(S.r + 1);
+        else if (a === 'restart') start(S.r);
+        return;
+      }
+      var chip = t.closest('.chip');
+      var slot = t.closest('.slot-drop');
+      if (chip && !chip.classList.contains('chip--placed')) {
+        var id = chip.getAttribute('data-id');
+        S.sel = S.sel === id ? null : id; render('c' + id); return;
+      }
+      if (slot) {
+        var i = slot.getAttribute('data-drop');
+        if (S.sel !== null) dropOn(S.sel, i);
+        else if (S.placed[i] != null) { put(S.placed[i], null); render('s' + i); }
+        return;
+      }
+      if (S.sel !== null && t.closest('.bank')) { S.sel = null; render(); }
+    });
+    root.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('slot-drop')) { e.preventDefault(); e.target.click(); }
+    });
+    enableDrag(root, dropOn);
+    start(0);
+  }
+
+  /* ---------- Sortera i lådor ---------- */
+  function makeSort(root, cfg) {
+    var S;
+    function start() {
+      var items = shuffle(cfg.items.map(function (it, i) { return { id: String(i), t: it[0], b: it[1] }; }));
+      S = { items: items, placed: {}, sel: null, checked: false };
+      render();
+    }
+    function item(id) { for (var i = 0; i < S.items.length; i++) if (S.items[i].id === id) return S.items[i]; return null; }
+    function label(key) { for (var i = 0; i < cfg.buckets.length; i++) if (cfg.buckets[i][0] === key) return cfg.buckets[i][1]; return ''; }
+    function render(fk) {
+      var free = S.items.filter(function (it) { return S.placed[it.id] == null; });
+      var right = 0;
+      var buckets = cfg.buckets.map(function (bk) {
+        var inside = S.items.filter(function (it) { return S.placed[it.id] === bk[0]; });
+        var chips = inside.map(function (it) {
+          var st = '', fix = null;
+          if (S.checked) { if (it.b === bk[0]) { st = 'is-right'; right++; } else { st = 'is-wrong'; fix = 'Hör till: ' + label(it.b); } }
+          return chipHtml(it.id, it.t, { placed: true, state: st, fix: fix });
+        }).join('');
+        return '<div class="bucket" style="--c:var(--' + bk[2] + ');--t:var(--' + bk[2] + '-tint)">' +
+          '<p class="bucket-head">' + esc(bk[1]) + '<span>' + inside.length + '</span></p>' +
+          '<div class="bucket-body" data-drop="' + bk[0] + '">' + chips +
+          '<button type="button" class="bucket-add" data-add="' + bk[0] + '" data-key="b' + bk[0] + '">' +
+          (S.sel !== null ? 'Lägg i ' + esc(bk[1].toLowerCase()) : 'Släpp här') + '</button></div></div>';
+      }).join('');
+      var total = S.items.length;
+      root.innerHTML =
+        '<div class="pair-top"><span></span><span class="pair-count">' + Object.keys(S.placed).length + ' av ' + total + ' sorterade</span></div>' +
+        '<p class="q-hint">Dra varje kort till rätt låda. På mobilen trycker du först på kortet och sedan på lådan.</p>' +
+        '<div class="bank' + (S.sel !== null ? ' is-armed' : '') + '" data-drop="bank">' +
+        (free.length ? free.map(function (it) { return chipHtml(it.id, it.t, { sel: S.sel === it.id }); }).join('') :
+          '<span class="bank-empty">Allt är sorterat. Tryck på Rätta.</span>') + '</div>' +
+        '<div class="buckets buckets--' + cfg.buckets.length + (S.sel !== null ? ' is-armed' : '') + '">' + buckets + '</div>' +
+        actions(S, total, right, null);
+      focusKey(root, fk);
+    }
+    function put(id, key) {
+      if (key === 'bank' || key == null) delete S.placed[id]; else S.placed[id] = key;
+      S.sel = null; S.checked = false;
+    }
+    root.addEventListener('click', function (e) {
+      var t = e.target;
+      var act = t.closest('[data-act]');
+      if (act) {
+        var a = act.getAttribute('data-act');
+        if (a === 'check') { S.checked = true; S.sel = null; render(); }
+        else if (a === 'retry') { S.items.forEach(function (it) { if (S.placed[it.id] != null && S.placed[it.id] !== it.b) delete S.placed[it.id]; }); S.checked = false; render(); }
+        else if (a === 'restart') start();
+        return;
+      }
+      var add = t.closest('.bucket-add');
+      if (add) { var k = add.getAttribute('data-add'); if (S.sel !== null) { put(S.sel, k); render('b' + k); } return; }
+      var chip = t.closest('.chip');
+      if (chip) {
+        var id = chip.getAttribute('data-id');
+        if (chip.classList.contains('chip--placed')) {
+          var body = chip.closest('[data-drop]');
+          if (S.sel !== null) { put(S.sel, body.getAttribute('data-drop')); render(); }
+          else { put(id, null); render('c' + id); }
+        } else { S.sel = S.sel === id ? null : id; render('c' + id); }
+        return;
+      }
+      var bodyEl = t.closest('.bucket-body');
+      if (bodyEl && S.sel !== null) { put(S.sel, bodyEl.getAttribute('data-drop')); render(); }
+    });
+    enableDrag(root, function (id, target) { put(id, target); render(); });
+    start();
+  }
+
+  /* ---------- Starta alla övningar ---------- */
+  var EX = DATA.exercises || {};
+  $$(document, '[data-ex]').forEach(function (el) {
+    var cfg = EX[el.getAttribute('data-ex')];
+    if (!cfg) return;
+    if (cfg.kind === 'sort') makeSort(el, cfg); else makeSlots(el, cfg);
+  });
+})();
+
+</script>
+
+</body>
+</html>
